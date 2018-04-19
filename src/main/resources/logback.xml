@@ -1,0 +1,26 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>[%d{HH:mm:ss}] [%thread] [%level] [%logger{36}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!--
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>kawaiibot.log</file>
+        <append>false</append>
+        &lt;!&ndash; encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default &ndash;&gt;
+        <encoder>
+            <pattern>%-4r %-5level %logger{35}: %msg%n</pattern>
+        </encoder>
+    </appender>
+    -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <logger name="org.reflections" level="error"/>
+    <logger name="ch.qos" level="warn"/>
+</configuration>

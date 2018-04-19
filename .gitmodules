@@ -1,0 +1,3 @@
+[submodule "kawaiibot_api"]
+	path = kawaiibot_api
+	url = git@github.com:lepeli/kawaiibot_api.git
