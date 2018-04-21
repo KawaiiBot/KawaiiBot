@@ -7,6 +7,7 @@ import me.aurieh.ichigo.utils.StringTokenizer
 import me.aurieh.ichigo.utils.StringUtil
 import me.aurieh.ichigo.utils.StringUtil.userMentionPattern
 import net.dv8tion.jda.core.entities.Member
+import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 /**
@@ -28,6 +29,8 @@ class Arguments internal constructor(private val asIter: StringTokenizer.TokenIt
     val asCleanerString by lazy { StringUtil.cleanerContent(asString) }
     val asFlags by lazy { OptParser.parsePosix(bySpace) }
     val asMember by lazy { convertMember(asString) }
+    val asSnowflake by lazy { convertSnowflake(asString) }
+    val asUser by lazy { convertUser(asString) }
 
     /**
      * Same as checking if hasNext() and then calling next()
@@ -167,6 +170,7 @@ class Arguments internal constructor(private val asIter: StringTokenizer.TokenIt
 
     /**
      * Next argument resolved as a member
+     * NOTE: resolves based on IDs, mentions, usernames and username#discrim combos
      * @throws InvalidArgumentError
      * @throws NoSuchElementException
      *
@@ -182,6 +186,7 @@ class Arguments internal constructor(private val asIter: StringTokenizer.TokenIt
         }
     }
 
+
     /**
      * Collect rest of elements into a string and resolve that
      * @throws InvalidArgumentError
@@ -191,18 +196,96 @@ class Arguments internal constructor(private val asIter: StringTokenizer.TokenIt
      * @see userDiscrimPattern
      */
     fun collectMember(): Member {
-        return convertMember(collect()) ?: throw InvalidArgumentError("badly formatted member")
+        return convertMember(collect())
+                ?: throw InvalidArgumentError("badly formatted member (use mention, id or name)")
     }
 
     /**
      * Next argument as member or null if unavailable or invalid
      *
+     * @see nextMember
      * @see userMentionPattern
      * @see userDiscrimPattern
      */
     fun nextMemberOrNull(): Member? {
         return convertMember(nextOrNull() ?: return null)
                 ?: throw InvalidArgumentError("badly formatted member (use mention, id or name)")
+    }
+
+    /**
+     * Next argument resolved as a snowflake (represented as a Long)
+     * NOTE: doesn't try to resolve from cache
+     * @throws InvalidArgumentError
+     *
+     * @see userMentionPattern
+     */
+    fun nextSnowflake(): Long {
+        try {
+            return convertSnowflake(next())
+                    ?: throw InvalidArgumentError("badly formatted user (use mention or id)")
+        } catch (e: NoSuchElementException) {
+            throw InvalidArgumentError("missing user")
+        }
+    }
+
+    /**
+     * Collect rest of elements into a string and resolve that
+     * @throws InvalidArgumentError
+     * @throws NoSuchElementException
+     *
+     * @see userMentionPattern
+     */
+    fun collectSnowflake(): Long {
+        return convertSnowflake(next())
+                ?: throw InvalidArgumentError("badly formatted user (use mention or id)")
+    }
+
+    /**
+     * Next argument resolved as a snowflake or null if unavailable or invalid
+     * @throws InvalidArgumentError
+     * @throws NoSuchElementException
+     *
+     * @see userMentionPattern
+     */
+    fun nextSnowflakeOrNull(): Long? {
+        return convertSnowflake(nextOrNull() ?: return null)
+                ?: throw InvalidArgumentError("badly formatted user (use mention or id)")
+    }
+
+    /**
+     * Next argument resolved as a member
+     * NOTE: only resolves based on IDs and mentions
+     * @throws InvalidArgumentError
+     * @throws NoSuchElementException
+     *
+     * @see userMentionPattern
+     */
+    fun nextUser(): User {
+        try {
+            return convertUser(next())
+                    ?: throw InvalidArgumentError("badly formatted user (use mention or id)")
+        } catch (e: NoSuchElementException) {
+            throw InvalidArgumentError("missing user", e)
+        }
+    }
+
+    /**
+     * Collect rest of elements into a string and resolve that
+     */
+    fun collectUser(): User {
+        return convertUser(collect())
+                ?: throw InvalidArgumentError("badly formatted user (use mention or id)")
+    }
+
+    /**
+     * Next argument as user or null if unavailable or invalid
+     *
+     * @see nextUser
+     * @see userMentionPattern
+     */
+    fun nextUserOrNull(): User? {
+        return convertUser(nextOrNull() ?: return null)
+                ?: throw InvalidArgumentError("badly formatted user (use mention or id)")
     }
 
     private fun convertBoolean(str: String): Boolean {
@@ -229,6 +312,22 @@ class Arguments internal constructor(private val asIter: StringTokenizer.TokenIt
             receivedEvent.guild.members.find { it.user.name == username && it.user.discriminator == discrim }
         else
             receivedEvent.guild.members.find { it.user.name == str }
+    }
+
+    private fun convertSnowflake(str: String): Long? {
+        if (str.isEmpty()) return null
+        val id = userMentionPattern.find(str)?.groups?.get(1)?.value ?: str
+        return id.toLongOrNull()
+    }
+
+    private fun convertUser(str: String): User? {
+        if (str.isEmpty()) return null
+        val id = userMentionPattern.find(str)?.groups?.get(1)?.value ?: str
+        return try {
+            receivedEvent.jda.getUserById(id)
+        } catch (e: NumberFormatException) {
+            null
+        }
     }
 
     private fun convertUsernameDiscrim(str: String): Pair<String?, String?> {
