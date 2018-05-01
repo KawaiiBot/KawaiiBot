@@ -5,7 +5,7 @@ object NSFWCheck {
 
     fun check(items: List<String>): Boolean {
         for (item in items)
-            if (ILLEGAL_NSFW.contains(item))
+            if (ILLEGAL_NSFW.contains(item.toLowerCase()))
                 return false
         return true
     }
