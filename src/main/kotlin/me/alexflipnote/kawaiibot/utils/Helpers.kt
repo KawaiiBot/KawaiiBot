@@ -13,9 +13,7 @@ object Helpers {
     private val classLoader = Helpers::class.java.classLoader
     private val random = Random()
 
-    fun chooseRandom(array: Array<String>): String {
-        return array[random.nextInt(array.size)]
-    }
+    fun chooseRandom(array: Array<String>) = array[random.nextInt(array.size)]
 
     fun chooseRandom(array: JSONArray): JSONObject = array.getJSONObject(random.nextInt(array.length()))
 
