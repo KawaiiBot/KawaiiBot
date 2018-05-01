@@ -21,8 +21,7 @@ class E621 : ICommand {
             return
         }
         RequestUtil.get(e621Search + URLEncoder.encode(args.joinToString(" "), "utf-8")).thenAccept {
-            val images = it.jsonArray()
-            val random = Helpers.chooseRandom(images)
+            val random = Helpers.chooseRandom(NSFWCheck.filterJSON(it.jsonArray()!!))
             ctx.send(random.getString("file_url"))
         }.thenException { ctx.send("No results found ;-;") }
     }

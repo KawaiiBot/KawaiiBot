@@ -22,7 +22,7 @@ class Rule34 : ICommand {
             return
         }
         RequestUtil.get(rule34Search + URLEncoder.encode(args.joinToString(" "), "utf-8")).thenAccept {
-            val random = Helpers.chooseRandom(it.jsonArray())
+            val random = Helpers.chooseRandom(NSFWCheck.filterJSON(it.jsonArray()!!))
             val imageUrl = rule34Cdn + random.getString("directory") + "/" + random.getString("image")
 
             ctx.send(imageUrl)
