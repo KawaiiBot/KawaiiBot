@@ -20,7 +20,7 @@ class Slap : ICommand {
             m.user.idLong == ctx.jda.selfUser.idLong ->
                 ctx.send("**${ctx.author.name}** we can no longer be friends ;-;")
             m.user.idLong == ctx.author.idLong ->
-                ctx.channel.sendFile(Helpers.getImageStream("images/butwhy.webp"), "butwhy.webp").queue()
+                ctx.channel.sendFile(Helpers.getImageStream("images/butwhy.gif"), "butwhy.gif").queue()
             else -> {
                 val api = KawaiiBot.wolkeApi
                 api.getRandomImage("slap", null, null, NsfwFilter.NO_NSFW, null).async { image ->
