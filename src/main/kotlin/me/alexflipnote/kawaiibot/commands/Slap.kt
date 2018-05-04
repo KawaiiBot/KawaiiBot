@@ -2,6 +2,7 @@ package me.alexflipnote.kawaiibot.commands
 
 import com.github.natanbc.weeb4j.image.NsfwFilter
 import me.alexflipnote.kawaiibot.KawaiiBot
+import me.alexflipnote.kawaiibot.utils.Helpers
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
@@ -19,7 +20,7 @@ class Slap : ICommand {
             m.user.idLong == ctx.jda.selfUser.idLong ->
                 ctx.send("**${ctx.author.name}** we can no longer be friends ;-;")
             m.user.idLong == ctx.author.idLong ->
-                ctx.send("https://media0.giphy.com/media/1M9fmo1WAFVK0/giphy.gif") // TODO: bundle this maybe
+                ctx.channel.sendFile(Helpers.getImageStream("images/butwhy.gif"), "butwhy.gif").queue()
             else -> {
                 val api = KawaiiBot.wolkeApi
                 api.getRandomImage("slap", null, null, NsfwFilter.NO_NSFW, null).async { image ->
