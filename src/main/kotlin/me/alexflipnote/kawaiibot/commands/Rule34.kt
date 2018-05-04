@@ -3,6 +3,7 @@ package me.alexflipnote.kawaiibot.commands
 import me.alexflipnote.kawaiibot.extensions.jsonArray
 import me.alexflipnote.kawaiibot.extensions.thenException
 import me.alexflipnote.kawaiibot.utils.Helpers
+import me.alexflipnote.kawaiibot.utils.NSFWCheck
 import me.alexflipnote.kawaiibot.utils.RequestUtil
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
@@ -15,8 +16,13 @@ class Rule34 : ICommand {
     private val rule34Cdn = "https://img.rule34.xxx/images/"
 
     override fun run(ctx: CommandContext) {
-        RequestUtil.get(rule34Search + URLEncoder.encode(ctx.argString, "utf-8")).thenAccept {
-            val random = Helpers.chooseRandom(it.jsonArray())
+        val args = ctx.args.bySpace
+        if (!NSFWCheck.check(args)) {
+            ctx.send("Illegal search term used!")
+            return
+        }
+        RequestUtil.get(rule34Search + URLEncoder.encode(args.joinToString(" "), "utf-8")).thenAccept {
+            val random = Helpers.chooseRandom(NSFWCheck.filterJSON(it.jsonArray()!!))
             val imageUrl = rule34Cdn + random.getString("directory") + "/" + random.getString("image")
 
             ctx.send(imageUrl)
