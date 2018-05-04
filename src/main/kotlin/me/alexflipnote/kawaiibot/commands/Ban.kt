@@ -17,7 +17,7 @@ class Ban : ICommand {
         }
         val reason = ctx.args.collect()
         ctx.guild.controller
-                .ban(user.toString(), 0)
+                .ban(user.toString(), 0) // TODO: wat, doesnt accept Longs, jda bug?
                 .reason(Responses.responsible(ctx.author, reason))
                 .queue({
                     ctx.send(Responses.action("banned"))

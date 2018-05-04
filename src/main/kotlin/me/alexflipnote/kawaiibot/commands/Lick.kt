@@ -2,7 +2,6 @@ package me.alexflipnote.kawaiibot.commands
 
 import com.github.natanbc.weeb4j.image.NsfwFilter
 import me.alexflipnote.kawaiibot.KawaiiBot
-import me.alexflipnote.kawaiibot.utils.Helpers
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
@@ -21,7 +20,8 @@ class Lick : ICommand {
             m.user.idLong == ctx.jda.selfUser.idLong ->
                 ctx.send("${ctx.author.name}... w-why do you lick me ;-;")
             m.user.idLong == ctx.author.idLong ->
-                ctx.channel.sendFile(Helpers.getImageStream("images/selflick.gif"), "selflick.gif").queue()
+                // TODO: download and bundle this image
+                ctx.send("https://blog.eat24.com/wp-content/uploads/2016/03/cat-licking-itself-.gif")
             else -> {
                 val api = KawaiiBot.wolkeApi
                 api.getRandomImage("lick", null, null, NsfwFilter.NO_NSFW, null).async { image ->
