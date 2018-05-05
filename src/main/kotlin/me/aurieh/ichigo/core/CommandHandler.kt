@@ -11,6 +11,10 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 import org.slf4j.LoggerFactory
 import java.util.*
+import net.dv8tion.jda.core.entities.TextChannel
+import net.dv8tion.jda.core.events.guild.GuildJoinEvent
+
+
 
 class CommandHandler private constructor(val commands: Map<String, CommandWrapper>, val aliases: Map<String, String>, private val prefix: String, private val checks: Set<ICheck>, private val developers: Set<Long>) : ListenerAdapter() {
     private var mentionPattern: Regex? = null
@@ -18,6 +22,19 @@ class CommandHandler private constructor(val commands: Map<String, CommandWrappe
 
     override fun onReady(event: ReadyEvent) {
         mentionPattern = Regex("^<@!?${event.jda.selfUser.id}>")
+    }
+
+    override fun onGuildJoin(event: GuildJoinEvent) {
+        for (channel in event.guild.textChannels) {
+            if (!event.guild.selfMember.hasPermission(channel, Permission.MESSAGE_WRITE))
+                continue
+
+            channel.sendMessage("Hello everyone, t-thanks for adding me :3\n" +
+                    "I hope I can do good on t-this server ❤\n" +
+                    "Use **+help** to see what I can do for you~\n" +
+                    "If you want help from my masters, join here: **<https://discord.gg/wGwgWJW>**").queue()
+            break
+        }
     }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
