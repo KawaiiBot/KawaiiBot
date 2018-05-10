@@ -7,13 +7,11 @@ import me.aurieh.ichigo.utils.StringTokenizer
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.events.ReadyEvent
+import net.dv8tion.jda.core.events.guild.GuildJoinEvent
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 import org.slf4j.LoggerFactory
 import java.util.*
-import net.dv8tion.jda.core.entities.TextChannel
-import net.dv8tion.jda.core.events.guild.GuildJoinEvent
-
 
 
 class CommandHandler private constructor(val commands: Map<String, CommandWrapper>, val aliases: Map<String, String>, private val prefix: String, private val checks: Set<ICheck>, private val developers: Set<Long>) : ListenerAdapter() {
@@ -65,7 +63,7 @@ class CommandHandler private constructor(val commands: Map<String, CommandWrappe
         if (bucket != null) { // can't use nullsafe because Long? is boxed
             val retryAfter = bucket.update(event)
             if (retryAfter > 0) {
-                send(event, "**Sorry, this command is on cooldown for ${retryAfter} milliseconds**")
+                send(event, "**Sorry, this command is on cooldown for $retryAfter milliseconds**")
                 return
             }
         }

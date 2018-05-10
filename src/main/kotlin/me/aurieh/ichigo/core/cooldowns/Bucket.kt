@@ -11,7 +11,7 @@ class Bucket(private val rate: Int, private val per: Int, private val bucketType
     private val millis = unit.duration.toMillis()
 
     private fun getRemainingRate(key: Long): Int {
-        return rates.adjustOrPutValue(key, -1, per-1)
+        return rates.adjustOrPutValue(key, -1, per - 1)
     }
 
     private fun getRemainingCooldown(key: Long, now: Long): Long {

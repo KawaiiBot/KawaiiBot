@@ -26,18 +26,18 @@ class EventWaiter : ListenerAdapter() {
         }
     }
 
-    fun<T : Event> addListener(clazz: Class<T>, listener: Listener<T>): EventWaiter {
+    fun <T : Event> addListener(clazz: Class<T>, listener: Listener<T>): EventWaiter {
         synchronized(listeners) {
             listeners.computeIfAbsent(clazz, { mutableSetOf() }).add(listener)
         }
         return this
     }
 
-    inline fun<reified T : Event> addListener(listener: Listener<T>): EventWaiter {
+    inline fun <reified T : Event> addListener(listener: Listener<T>): EventWaiter {
         return addListener(T::class.java, listener)
     }
 
-    fun<T : Event> waitFor(clazz: Class<T>, timeout: Long = -1, check: ((T) -> Boolean)? = null) = futureOf<T> {
+    fun <T : Event> waitFor(clazz: Class<T>, timeout: Long = -1, check: ((T) -> Boolean)? = null) = futureOf<T> {
         val listener = object : Listener<T> {
             override fun pass(e: T) {
                 try {
@@ -57,7 +57,7 @@ class EventWaiter : ListenerAdapter() {
         if (timeout > 0) timer.schedule(timerTask { cancel(true) }, timeout)
     }
 
-    inline fun<reified T : Event> waitFor(timeout: Long = -1, noinline check: ((T) -> Boolean)? = null): CompletableFuture<T> {
+    inline fun <reified T : Event> waitFor(timeout: Long = -1, noinline check: ((T) -> Boolean)? = null): CompletableFuture<T> {
         return waitFor(T::class.java, timeout, check)
     }
 
