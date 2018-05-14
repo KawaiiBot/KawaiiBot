@@ -44,7 +44,7 @@ object RequestUtil {
         block()
     }
 
-    fun<K, V> jsonBody(vararg pairs: Pair<K, V>): RequestBody {
+    fun <K, V> jsonBody(vararg pairs: Pair<K, V>): RequestBody {
         return RequestBody.create(MediaType.APPLICATION_JSON, JSONObject(mutableMapOf(*pairs)).toString())
     }
 
@@ -102,7 +102,7 @@ object RequestUtil {
             raw.close()
         }
 
-        private inline fun<T : Any> isValid(calc: () -> T): T {
+        private inline fun <T : Any> isValid(calc: () -> T): T {
             if (closed) throw IllegalStateException("already closed")
             use { return calc() }
         }

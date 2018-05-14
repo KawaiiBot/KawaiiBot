@@ -12,7 +12,7 @@ class Dog : ICommand {
     override fun run(ctx: CommandContext) {
         RequestUtil.get("http://random.dog/woof").thenAccept {
             val r = it.closing()?.string() ?: "I couldn't fetch any dogs ;-;"
-            ctx.send("https://random.dog/" + r)
+            ctx.send("https://random.dog/$r")
         }.thenException { ctx.send("I-I couldn't find any dogs... I'm sorry ;-;") }
     }
 }

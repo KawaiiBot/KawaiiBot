@@ -16,7 +16,7 @@ class CommandBuilder(
         return this
     }
 
-    fun<T : ICheck> addCheckAll(from: Collection<T>): CommandBuilder {
+    fun <T : ICheck> addCheckAll(from: Collection<T>): CommandBuilder {
         checks.addAll(from)
         return this
     }
