@@ -105,7 +105,7 @@ class CommandHandler private constructor(val commands: Map<String, CommandWrappe
             ctx.send("**You have an invalid/missing argument:**\n```${e.message}```")
         } catch (e: OptParser.EmptyKeyError) {
             ctx.send("**You have an empty flag key**")
-        } catch (e: OptParser.UnclosedQuoteError) {
+        } catch (e: StringTokenizer.UnclosedQuoteError) {
             ctx.send(UNCLOSED_QUOTE_ERROR)
         } catch (e: Throwable) {
             LOG.error("command runner raised an uncaught exception", e)
