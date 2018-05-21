@@ -4,6 +4,7 @@ import me.aurieh.ichigo.utils.StringTokenizer
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.entities.*
+import net.dv8tion.jda.core.events.Event
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import org.slf4j.LoggerFactory
 
@@ -46,6 +47,14 @@ class CommandContext internal constructor(val receivedEvent: MessageReceivedEven
         channel.sendMessage(EmbedBuilder().apply(block).build()).queue(success) {
             LOG.error("error while trying to send embed", it)
         }
+    }
+
+    inline fun<reified T : Event> waitFor(crossinline predicate: (T) -> Boolean, timeout: Int = -1): T {
+        TODO("Aurieh will implement this")
+    }
+
+    fun sameContext(): ((MessageReceivedEvent) -> Boolean) {
+        return { author.id == it.author.id && channel.id == it.channel.id }
     }
 
     companion object {
