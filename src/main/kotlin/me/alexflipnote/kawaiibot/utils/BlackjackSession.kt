@@ -30,6 +30,7 @@ class BlackjackSession(private val ctx: CommandContext) {
             if (choice != "yes") {
                 playing = false
             } else {
+                deck.clear()  // Remove this line for actual blackjack instead of pure randomness (requested by alex)
                 userCards.clear()
                 botCards.clear()
             }
