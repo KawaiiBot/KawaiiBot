@@ -9,6 +9,5 @@ import me.aurieh.ichigo.core.annotations.Command
 class Blackjack : CoroutineCommand() {
     override suspend fun execute(ctx: CommandContext) {
         BlackjackSession(ctx).start()
-
     }
 }

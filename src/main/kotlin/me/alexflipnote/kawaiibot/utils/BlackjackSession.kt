@@ -21,9 +21,7 @@ class BlackjackSession(private val ctx: CommandContext) {
         initialCards()
         while (playing) {
             ctx.channel.sendMessage(getLayoutText())
-            if (getPoints(userCards) == 21){
-                endStatus = "won"
-            } else {
+            if (getPoints(userCards) != 21) {
                 askCard()
             }
 
@@ -112,7 +110,21 @@ class BlackjackSession(private val ctx: CommandContext) {
         return deck.removeAt(0)
     }
 
-    private fun getPoints(cards: List<String>): Int = cards.map { getValue(it) }.sum()
+    private fun getPoints(cards: List<String>): Int {
+        var hasA = false
+        var points = 0
+        cards.forEach {
+           if (it[0] == 'A')
+               hasA = true
+            points += getValue(it)
+        }
+
+        if (points < 11 && hasA){
+            points += 10
+        }
+
+        return points
+    }
 
     private fun getValue(card: String): Int = ranks.indexOf(card[0].toString())+1
 
