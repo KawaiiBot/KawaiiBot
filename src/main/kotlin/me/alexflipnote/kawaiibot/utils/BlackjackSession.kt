@@ -25,7 +25,7 @@ class BlackjackSession(private val ctx: CommandContext) {
                 askCard()
             }
 
-            val msg = ctx.channel.sendMessage("Want to play again? Type `yes` if you do~").await()
+            val msg = ctx.channel.sendMessage("Do you want to play again? Type `yes` if you do.").await()
             val choice = ctx.waitFor(ctx.sameContext(), 60).message.contentRaw
             if (choice != "yes") {
                 playing = false
@@ -40,7 +40,7 @@ class BlackjackSession(private val ctx: CommandContext) {
     private fun getLayoutText(hideBot: Boolean = true): String {
         val botSet = "${botCards[0]} ${botCards.subList(1, botCards.size-1).map { it -> if (hideBot) "??" else it }.joinToString(" ")}"
         val userSet = userCards.joinToString(" ")
-        return "```Bot (${if (hideBot) getValue(botCards[0]) else getPoints(botCards)}: $botSet\n\nYou ${getPoints(userCards)}: $userSet```"
+        return "```KawaiiBot (${if (hideBot) getValue(botCards[0]) else getPoints(botCards)}: $botSet\n${ctx.author.name} (${getPoints(userCards)}): $userSet```"
     }
 
     private suspend fun initialCards() {
@@ -53,7 +53,7 @@ class BlackjackSession(private val ctx: CommandContext) {
     private suspend fun askCard() {
         var choice: String? = null
         while (choice.isNullOrBlank()) {
-            val msg = ctx.channel.sendMessage("type `hit` to get another card, or `stand` to stop!").await()
+            val msg = ctx.channel.sendMessage("Type `hit` to get another card, or `stand` to stop!").await()
             choice = ctx.waitFor(ctx.sameContext(), 60).message.contentRaw
             msg.delete().queue()
             when (choice) {
@@ -102,7 +102,7 @@ class BlackjackSession(private val ctx: CommandContext) {
             }
         }
 
-        ctx.channel.sendMessage("You $endStatus against me!\n\n${getLayoutText(false)}")
+        ctx.channel.sendMessage("${ctx.author.name} $endStatus against KawaiiBot!${getLayoutText(false)}")
     }
 
     private suspend fun drawCard(): String {
