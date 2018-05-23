@@ -1,4 +1,4 @@
-package me.alexflipnote.kawaiibot.utils
+package me.alexflipnote.kawaiibot.entities
 
 import com.google.common.collect.Sets
 import me.aurieh.ichigo.core.CommandContext
