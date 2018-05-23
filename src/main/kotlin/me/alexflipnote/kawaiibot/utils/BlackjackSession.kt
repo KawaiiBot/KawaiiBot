@@ -38,7 +38,9 @@ class BlackjackSession(private val ctx: CommandContext) {
     }
 
     private fun getLayoutText(hideBot: Boolean = true): String {
-        val botSet = "${botCards[0]} ${botCards.subList(1, botCards.size-1).map { it -> if (hideBot) "??" else it }.joinToString(" ")}"
+        val botFirst = botCards[0]
+        val botRest = botCards.subList(1, botCards.size-1).map { it -> if (hideBot) "??" else it }.joinToString(" ")
+        val botSet = "$botFirst $botRest"
         val userSet = userCards.joinToString(" ")
         return "```KawaiiBot (${if (hideBot) getValue(botCards[0]) else getPoints(botCards)}: $botSet\n${ctx.author.name} (${getPoints(userCards)}): $userSet```"
     }
@@ -51,8 +53,8 @@ class BlackjackSession(private val ctx: CommandContext) {
     }
 
     private suspend fun askCard() {
-        var choice: String? = null
-        while (choice.isNullOrBlank()) {
+        var choice = ""
+        while (choice.isEmpty()) {
             val msg = ctx.channel.sendMessage("Type `hit` to get another card, or `stand` to stop!").await()
             choice = ctx.waitFor(ctx.sameContext(), 60).message.contentRaw
             msg.delete().queue()
@@ -102,7 +104,7 @@ class BlackjackSession(private val ctx: CommandContext) {
             }
         }
 
-        ctx.channel.sendMessage("${ctx.author.name} $endStatus against KawaiiBot!${getLayoutText(false)}")
+        ctx.channel.sendMessage("${ctx.author.name} $endStatus against KawaiiBot!${getLayoutText(false)}").queue()
     }
 
     private suspend fun drawCard(): String {
@@ -120,7 +122,7 @@ class BlackjackSession(private val ctx: CommandContext) {
             points += getValue(it)
         }
 
-        if (points < 11 && hasA){
+        if (points < 11 && hasA) {
             points += 10
         }
 
