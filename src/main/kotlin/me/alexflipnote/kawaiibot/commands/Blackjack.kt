@@ -1,6 +1,6 @@
 package me.alexflipnote.kawaiibot.commands
 
-import me.alexflipnote.kawaiibot.utils.BlackjackSession
+import me.alexflipnote.kawaiibot.entities.BlackjackSession
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.CoroutineCommand
 import me.aurieh.ichigo.core.annotations.Command
