@@ -14,7 +14,7 @@ class User : ICommand {
 
         ctx.sendEmbed {
             val fullName = "${user.name}#${user.discriminator}"
-            setTitle("**ℹ About $fullName**")
+            setTitle("ℹ About **${user.id}**")
             setColor(KawaiiBot.embedColor)
             setThumbnail(user.effectiveAvatarUrl)
 
