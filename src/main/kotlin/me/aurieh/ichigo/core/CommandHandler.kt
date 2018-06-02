@@ -30,7 +30,8 @@ class CommandHandler private constructor(val commands: Map<String, CommandWrappe
             channel.sendMessage("Hello everyone, t-thanks for adding me :3\n" +
                     "I hope I can do good on t-this server ❤\n" +
                     "Use **+help** to see what I can do for you~\n" +
-                    "If you want help from my masters, join here: **<https://discord.gg/wGwgWJW>**").queue()
+                    "If you want help from my masters, join here: **<https://discord.gg/wGwgWJW>**\n" +
+                    "or follow my Twitter here **<https://twitter.com/KawaiiDiscord>** ;3").queue()
             break
         }
     }
