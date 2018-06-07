@@ -24,4 +24,4 @@ WORKDIR /app
 RUN mv /src/build/libs/kawaiibot-*-all.jar /app/kawaiibot.jar
 RUN mv /src/*.properties /app/
 
-CMD ["java", "-jar", "/app/kawaiibot.jar"]
+CMD ["java", "-XX:+UseG1GC", "-Xmx28G", "-jar", "/app/kawaiibot.jar"]
