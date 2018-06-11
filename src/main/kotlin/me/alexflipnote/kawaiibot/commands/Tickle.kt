@@ -6,7 +6,6 @@ import me.alexflipnote.kawaiibot.utils.Helpers
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
-import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.Permission
 
 @Command(description = "Tickle someone! :3", botPermissions = [Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES])
@@ -21,12 +20,10 @@ class Tickle : ICommand {
         } else {
             val api = KawaiiBot.wolkeApi
             api.getRandomImage("tickle", null, null, NsfwFilter.NO_NSFW, null).async { image ->
-                ctx.channel.sendMessage(EmbedBuilder()
-                        .setColor(KawaiiBot.embedColor)
-                        .setDescription("**${m.effectiveName}**, you got tickled by **${ctx.author.name}**")
-                        .setImage(image.url)
-                        .build()
-                ).queue()
+                ctx.sendEmbed {
+                    setDescription("**${m.effectiveName}**, you got tickled by **${ctx.author.name}**")
+                    setImage(image.url)
+                }
             }
         }
     }

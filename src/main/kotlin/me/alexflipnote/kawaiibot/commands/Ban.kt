@@ -12,9 +12,15 @@ class Ban : ICommand {
     override fun run(ctx: CommandContext) {
         val user = ctx.args.nextSnowflakeOrNull() ?: return ctx.send("Give me someone to ban ;-;")
         val member = ctx.guild!!.getMemberById(user)
+
         if (member != null && !ctx.member!!.canInteract(member)) {
-            return ctx.send("I can't interact with this user ;-;")
+            return ctx.send("That user is equivalent to, or higher than you ;-;")
         }
+
+        if (member != null && !ctx.guild.selfMember.canInteract(member)) {
+            return ctx.send("That user is equivalent to, or higher than me ;-;")
+        }
+
         val reason = ctx.args.collect()
         ctx.guild.controller
                 .ban(user.toString(), 0)

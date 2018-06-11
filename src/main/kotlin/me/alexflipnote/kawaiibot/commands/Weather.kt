@@ -6,8 +6,9 @@ import me.alexflipnote.kawaiibot.utils.RequestUtil
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
+import net.dv8tion.jda.core.Permission
 
-@Command(description = "Find out the weather in your area")
+@Command(description = "Find out the weather in your area", botPermissions = [Permission.MESSAGE_ATTACH_FILES])
 class Weather : ICommand { // TODO: convert to AbstractAPICommand
 
     override fun run(ctx: CommandContext) {

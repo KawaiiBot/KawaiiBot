@@ -6,7 +6,6 @@ import me.alexflipnote.kawaiibot.utils.Helpers
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
-import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.Permission
 
 @Command(description = "Lick someone o////o", botPermissions = [Permission.MESSAGE_EMBED_LINKS])
@@ -25,12 +24,11 @@ class Lick : ICommand {
             else -> {
                 val api = KawaiiBot.wolkeApi
                 api.getRandomImage("lick", null, null, NsfwFilter.NO_NSFW, null).async { image ->
-                    ctx.channel.sendMessage(EmbedBuilder()
-                            .setColor(KawaiiBot.embedColor)
-                            .setDescription("**${m.effectiveName}**, was licked by **${ctx.author.name}**")
-                            .setImage(image.url)
-                            .build()
-                    ).queue()
+                    ctx.sendEmbed {
+                        setColor(KawaiiBot.embedColor)
+                        setDescription("**${m.effectiveName}**, was licked by **${ctx.author.name}**")
+                        setImage(image.url)
+                    }
                 }
             }
         }

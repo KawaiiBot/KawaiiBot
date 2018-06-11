@@ -8,7 +8,6 @@ import me.alexflipnote.kawaiibot.utils.RequestUtil
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
-import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.Permission
 import java.net.URLEncoder
 
@@ -28,7 +27,7 @@ class Live : ICommand {
             header("Client-ID", clientId)
         }.thenAccept {
             val json = it.json()
-                    ?: return@thenAccept ctx.send("I received a null response body ;-;")
+                    ?: return@thenAccept ctx.send("I didn't get a valid response from Twitch ;-;")
 
             if (!Helpers.keyExists(json, "stream")) {
                 ctx.send("**${ctx.args.asCleanerString}** either doesn't exist or isn't streaming right now...")
@@ -42,14 +41,12 @@ class Live : ICommand {
                 val viewers = tStream.getInt("viewers")
                 val word = if (viewers == 1) "viewer" else "viewers"
 
-                val embed = EmbedBuilder()
-                        .setColor(KawaiiBot.embedColor)
-                        .setTitle(ctx.args.asCleanString)
-                        .setDescription("[**$status**](${channel.getString("url")}) (**$viewers** $word)\n\n"
-                                + if (game != null) "Playing **$game**" else "")
-                        .setThumbnail(channel.optString("logo", ""))
-
-                ctx.channel.sendMessage(embed.build()).queue()
+                ctx.sendEmbed {
+                    setTitle(ctx.args.asCleanString)
+                    setDescription("[**$status**](${channel.getString("url")}) (**$viewers** $word)\n\n"
+                            + if (game != null) "Playing **$game**" else "")
+                    setThumbnail(channel.optString("logo", ""))
+                }
             }
         }.thenException { ctx.send("I didn't get a response from Twitch...") }
     }

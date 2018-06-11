@@ -13,7 +13,7 @@ class Drake : AbstractAPICommand() {
     override fun makeBody(ctx: CommandContext): RequestBody? {
         val args = ctx.argString.split("|")
         if (args.size != 2) return failBody {
-            ctx.send("You must pass exactly 2 arguments delimited by the pipe char |")
+            ctx.send("You need to specify top and body text (split using `|`) ;-;")
         }
 
         return RequestUtil.jsonBody("top" to args[0], "bottom" to args[1])

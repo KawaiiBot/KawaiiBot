@@ -4,8 +4,9 @@ import me.alexflipnote.kawaiibot.entities.Responses
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
+import net.dv8tion.jda.core.Permission
 
-@Command(description = "Check info about current server", guildOnly = true)
+@Command(description = "Check info about current server", guildOnly = true, botPermissions = [Permission.MESSAGE_EMBED_LINKS])
 class Server : ICommand {
     override fun run(ctx: CommandContext) {
         ctx.sendEmbed {

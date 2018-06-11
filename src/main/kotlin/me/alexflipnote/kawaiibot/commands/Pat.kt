@@ -1,13 +1,12 @@
 package me.alexflipnote.kawaiibot.commands
 
 import com.github.natanbc.weeb4j.image.NsfwFilter
-import me.alexflipnote.kawaiibot.extensions.sendFile
 import me.alexflipnote.kawaiibot.KawaiiBot
+import me.alexflipnote.kawaiibot.extensions.sendFile
 import me.alexflipnote.kawaiibot.utils.Helpers
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
-import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.Permission
 
 @Command(description = "Give someone a pat! o//o", botPermissions = [Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES])
@@ -26,12 +25,10 @@ class Pat : ICommand {
             else -> {
                 val api = KawaiiBot.wolkeApi
                 api.getRandomImage("pat", null, null, NsfwFilter.NO_NSFW, null).async { image ->
-                    ctx.channel.sendMessage(EmbedBuilder()
-                            .setColor(KawaiiBot.embedColor)
-                            .setDescription("**${m.user.name}**, you got a pat from **${ctx.author.name}**")
-                            .setImage(image.url)
-                            .build()
-                    ).queue()
+                    ctx.sendEmbed {
+                        setDescription("**${m.user.name}**, you got a pat from **${ctx.author.name}**")
+                        setImage(image.url)
+                    }
                 }
             }
         }

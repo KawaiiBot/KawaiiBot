@@ -8,7 +8,7 @@ import me.aurieh.ichigo.core.annotations.Command
 class Echo : ICommand {
     override fun run(ctx: CommandContext) {
         if (ctx.argString.isEmpty()) {
-            ctx.send("You can't listen to the silence.")
+            ctx.send("Nothing will echo if you don't give me something to say... ;-;")
         } else {
             ctx.send("**${ctx.author.name}**: ${ctx.args.asCleanString}")
         }

@@ -1,5 +1,6 @@
 package me.aurieh.ichigo.core
 
+import me.alexflipnote.kawaiibot.KawaiiBot
 import me.aurieh.ichigo.utils.StringTokenizer
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.JDA
@@ -38,12 +39,18 @@ class CommandContext internal constructor(val receivedEvent: MessageReceivedEven
         }
     }
 
+    fun sendEmbed(embed: MessageEmbed) {
+        channel.sendMessage(embed).queue({}) {
+            LOG.error("error while trying to send messageembed", it)
+        }
+    }
+
     inline fun sendEmbed(block: EmbedBuilder.() -> Unit) {
         return sendEmbed(block, {})
     }
 
     inline fun sendEmbed(block: EmbedBuilder.() -> Unit, noinline success: (Message) -> Unit) {
-        channel.sendMessage(EmbedBuilder().apply(block).build()).queue(success) {
+        channel.sendMessage(EmbedBuilder().setColor(KawaiiBot.embedColor).apply(block).build()).queue(success) {
             LOG.error("error while trying to send embed", it)
         }
     }

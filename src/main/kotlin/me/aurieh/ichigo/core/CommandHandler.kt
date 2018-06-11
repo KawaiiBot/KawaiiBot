@@ -1,6 +1,7 @@
 package me.aurieh.ichigo.core
 
 import kotlinx.coroutines.experimental.newFixedThreadPoolContext
+import me.alexflipnote.kawaiibot.KawaiiBot
 import me.aurieh.ichigo.core.checks.ICheck
 import me.aurieh.ichigo.utils.OptParser
 import me.aurieh.ichigo.utils.StringTokenizer
@@ -95,6 +96,12 @@ class CommandHandler private constructor(val commands: Map<String, CommandWrappe
         if (!checks.all { it.pass(event, command, iter) }) return
         if (!command.checks.all { it.pass(event, command, iter) }) return
         // -- CHECKS --
+
+        if (command.properties.isNSFW) {
+            ++KawaiiBot.pornUsage
+        } else {
+            ++KawaiiBot.otherCommandUsage
+        }
 
         val ctx = CommandContext(event, prefix, iter, this)
 

@@ -5,7 +5,6 @@ import me.alexflipnote.kawaiibot.KawaiiBot
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
-import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.Permission
 
 @Command(description = "Kiss someone :3 ", botPermissions = [Permission.MESSAGE_EMBED_LINKS])
@@ -23,12 +22,10 @@ class Kiss : ICommand {
             else -> {
                 val api = KawaiiBot.wolkeApi
                 api.getRandomImage("kiss", null, null, NsfwFilter.NO_NSFW, null).async { image ->
-                    ctx.channel.sendMessage(EmbedBuilder()
-                            .setColor(KawaiiBot.embedColor)
-                            .setDescription("**${m.user.name}**,you got a kiss from **${ctx.author.name}**")
-                            .setImage(image.url)
-                            .build()
-                    ).queue()
+                    ctx.sendEmbed {
+                        setDescription("**${m.user.name}**,you got a kiss from **${ctx.author.name}**")
+                        setImage(image.url)
+                    }
                 }
             }
         }

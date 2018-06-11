@@ -16,9 +16,9 @@ class Flower : ICommand {
 
         when {
             m == null ->
-                ctx.send("Why are you trying to give the floor a flower ?")
+                ctx.send("Why are you trying to give the floor a flower?")
             m.user.idLong == ctx.jda.selfUser.idLong ->
-                ctx.send("*Awww*")
+                ctx.send("*Awww* ❤")
             else -> {
                 val msg = MessageBuilder()
                         .setContent("**${m.user.name}** you got a ${Helpers.chooseRandom(flowers)} from **${ctx.author.name}**")

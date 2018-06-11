@@ -2,10 +2,8 @@ package me.alexflipnote.kawaiibot.utils
 
 import org.json.JSONArray
 import org.json.JSONObject
-
 import java.io.InputStream
-import java.util.ArrayList
-import java.util.Random
+import java.util.*
 
 
 object Helpers {

@@ -50,8 +50,7 @@ class Urban : ICommand {
                         return@thenAccept ctx.send("The definition is too big for Discord, check it out here $permalink")
                     }
                     val embed = prepObject(def)
-                    println(embed)
-                    ctx.channel.sendMessage(embed).queue()
+                    ctx.sendEmbed(embed)
                 }
                 .thenException {
                     KawaiiBot.LOG

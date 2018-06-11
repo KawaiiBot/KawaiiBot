@@ -12,7 +12,8 @@ class FunFact : ICommand {
     override fun run(ctx: CommandContext) {
         RequestUtil.get("https://nekos.life/api/v2/fact").thenAccept {
             val res = it.json()?.getString("fact")
-            ctx.send("\uD83D\uDCDA **Fun fact:**\n" + res ?: return@thenAccept ctx.send("Bad response ;-;"))
+                    ?: return@thenAccept ctx.send("I couldn't find any facts to tell... I'm sorry ;-;")
+            ctx.send("\uD83D\uDCDA **Fun fact:**\n$res")
         }.thenException { ctx.send("I-I couldn't find any facts to tell... I'm sorry ;-;") }
     }
 }
