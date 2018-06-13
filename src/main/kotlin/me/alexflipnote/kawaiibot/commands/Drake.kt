@@ -4,9 +4,10 @@ import me.alexflipnote.kawaiibot.entities.AbstractAPICommand
 import me.alexflipnote.kawaiibot.utils.RequestUtil
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.annotations.Command
+import net.dv8tion.jda.core.Permission
 import okhttp3.RequestBody
 
-@Command(description = "Make a dank, drake meme", guildOnly = true)
+@Command(description = "Make a dank, drake meme", guildOnly = true, botPermissions = [Permission.MESSAGE_ATTACH_FILES])
 class Drake : AbstractAPICommand() {
     override val path = "/image/drake"
 
