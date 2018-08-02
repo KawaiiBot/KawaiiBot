@@ -25,7 +25,7 @@ class Meme : ICommand {
         val bottomText: String
 
         when {
-            args.size == 3 ->{
+            args.size == 3 -> {
                 val iter = StringTokenizer.tokenizeToIterator(args[0])
                 val newArgs = Arguments(iter, ctx.receivedEvent)
                 val member = newArgs.asMember
