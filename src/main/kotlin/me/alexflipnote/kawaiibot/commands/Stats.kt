@@ -8,6 +8,7 @@ import me.aurieh.ichigo.core.annotations.Command
 import net.dv8tion.jda.core.JDA
 import java.lang.StringBuilder
 import java.text.DecimalFormat
+import kotlin.math.roundToInt
 
 @Command(description = "View internal information", developerOnly = true)
 class Stats : ICommand {
@@ -19,13 +20,9 @@ class Stats : ICommand {
         val ramUsedMB = ramUsedRaw / 1048576
         val ramUsedPercent = dpFormatter.format(ramUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val shardCount = KawaiiBot.shardManager.shardsTotal
-        val averageShardLatency = KawaiiBot.shardManager.shards
-                .stream()
-                .map { shard -> shard.ping }
-                .reduce { a, b -> a + b }
-                .get() / shardCount
-
-        val onlineShards = KawaiiBot.shardManager.shards.filter { shard -> shard.status == JDA.Status.CONNECTED }.count()
+        val averageShardLatency = KawaiiBot.shardManager.averagePing.roundToInt()
+        val deadShards = KawaiiBot.shardManager.shards.filterNot { shard -> shard.status == JDA.Status.CONNECTED }
+        val onlineShards = KawaiiBot.shardManager.shardsTotal - deadShards.size
 
         val sb = StringBuilder()
         sb.append("```prolog\n")
@@ -40,6 +37,11 @@ class Stats : ICommand {
         sb.append("• Porn Cmds     :: ${KawaiiBot.pornUsage}\n")
         sb.append("• Normal Cmds   :: ${KawaiiBot.otherCommandUsage}\n\n")
         sb.append("• Shards Online :: $onlineShards/$shardCount\n")
+
+        if (deadShards.isNotEmpty()) {
+            sb.append("  - ${deadShards.map { it.shardInfo.shardId }.sorted().joinToString(" ")}")
+        }
+
         sb.append("• Average Ping  :: ${averageShardLatency}ms\n")
         sb.append("```")
 
