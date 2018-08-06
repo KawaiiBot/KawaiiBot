@@ -19,6 +19,8 @@ class Reboot : ICommand {
         for (shardId in shards) {
             KawaiiBot.shardManager.restart(shardId.toInt())
         }
+
+        ctx.message.addReaction("\uD83D\uDC4C").queue()
     }
 
 }

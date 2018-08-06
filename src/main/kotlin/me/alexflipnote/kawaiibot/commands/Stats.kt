@@ -39,7 +39,7 @@ class Stats : ICommand {
         sb.append("• Shards Online :: $onlineShards/$shardCount\n")
 
         if (deadShards.isNotEmpty()) {
-            sb.append("  - ${deadShards.map { it.shardInfo.shardId }.sorted().joinToString(" ")}")
+            sb.append("  - ${deadShards.map { it.shardInfo.shardId }.sorted().joinToString(" ")}\n")
         }
 
         sb.append("• Average Ping  :: ${averageShardLatency}ms\n")
