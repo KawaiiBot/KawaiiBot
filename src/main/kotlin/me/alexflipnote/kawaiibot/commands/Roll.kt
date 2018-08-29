@@ -29,7 +29,8 @@ class Roll : ICommand {
         if (lowerBound < -1000000)
             return ctx.send("You can't roll lower than -1,000,000 ;-;")
 
-        val rolled = random.nextInt(upperBound - lowerBound) + lowerBound
+        // add 1 to upperBound during the roll to make it an inclusive range of [lower,upper], rather than [lower,upper)
+        val rolled = random.nextInt((upperBound + 1) - lowerBound) + lowerBound
         ctx.send("**${ctx.author.name}** rolled $lowerBound-$upperBound and got **$rolled**")
     }
 
