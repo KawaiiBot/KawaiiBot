@@ -23,7 +23,7 @@ class Baka : ICommand {
                 val api = KawaiiBot.wolkeApi
                 api.getRandomImage("baka", null, null, NsfwFilter.NO_NSFW, null).async { image ->
                     ctx.sendEmbed {
-                        setDescription("**${ctx.author.name}**, called **${m.user.name}**, a baka")
+                        setDescription("**${ctx.author.name}**, called **${m.user.name}** a baka")
                         setImage(image.url)
                     }
                 }
