@@ -24,6 +24,10 @@ class Stats : ICommand {
         val deadShards = KawaiiBot.shardManager.shards.filterNot { shard -> shard.status == JDA.Status.CONNECTED }
         val onlineShards = KawaiiBot.shardManager.shardsTotal - deadShards.size
 
+        val secondsSinceBoot = (KawaiiBot.uptime / 1000).toDouble()
+        val commandsPerSecond = (KawaiiBot.pornUsage + KawaiiBot.otherCommandUsage) / secondsSinceBoot
+        val formattedCPS = dpFormatter.format(commandsPerSecond)
+
         val sb = StringBuilder()
         sb.append("```prolog\n")
         sb.append("=== KawaiiBot Statistics ===")
@@ -35,7 +39,8 @@ class Stats : ICommand {
         sb.append("• Guilds        :: ${KawaiiBot.shardManager.guildCache.size()}\n")
         sb.append("• Users         :: ${KawaiiBot.shardManager.userCache.size()}\n")
         sb.append("• Porn Cmds     :: ${KawaiiBot.pornUsage}\n")
-        sb.append("• Normal Cmds   :: ${KawaiiBot.otherCommandUsage}\n\n")
+        sb.append("• Normal Cmds   :: ${KawaiiBot.otherCommandUsage}\n")
+        sb.append("  • Per Second  :: $formattedCPS\n\n")
         sb.append("• Shards Online :: $onlineShards/$shardCount\n")
 
         if (deadShards.isNotEmpty()) {
