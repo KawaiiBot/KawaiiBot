@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 
-class CommandHandler private constructor(val commands: Map<String, CommandWrapper>, val aliases: Map<String, String>, private val prefix: String, private val checks: Set<ICheck>, private val developers: Set<Long>) : ListenerAdapter() {
+class CommandHandler private constructor(val commands: Map<String, CommandWrapper>, val aliases: Map<String, String>, val prefix: String, private val checks: Set<ICheck>, private val developers: Set<Long>) : ListenerAdapter() {
     private var mentionPattern: Regex? = null
     internal val coroutineContext by lazy { newFixedThreadPoolContext(Runtime.getRuntime().availableProcessors() / 2, "CommandHandlerPool") }
 

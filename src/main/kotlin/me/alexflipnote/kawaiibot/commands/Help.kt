@@ -12,21 +12,41 @@ import me.aurieh.ichigo.extensions.queueInOrder
 @Command(description = "Displays all of my available commands~", aliases = ["commands"])
 class Help : CoroutineCommand(Unconfined) {
     override suspend fun execute(ctx: CommandContext) {
-        // TODO: check handler
-        val canDisplayDeveloperCommands = KawaiiBot.developerIds.contains(ctx.author.idLong)
+        if (ctx.argString.isEmpty()) {
+            val canDisplayDeveloperCommands = KawaiiBot.developerIds.contains(ctx.author.idLong)
 
-        // TODO: Unshit
-        val commands = Helpers.splitText(KawaiiBot.commandHandler.commands
-                .filter { command -> !command.value.properties.hidden && (!command.value.properties.developerOnly || canDisplayDeveloperCommands) }
-                .map { command -> "${Helpers.pad(command.key.toLowerCase(), " ", 20)}${command.value.properties.description}" }
-                .joinToString("\n"), 1950)
+            val commands = Helpers.splitText(KawaiiBot.commandHandler.commands
+                    .filter { command -> !command.value.properties.hidden && (!command.value.properties.developerOnly || canDisplayDeveloperCommands) }
+                    .toSortedMap()
+                    .map { command -> "${Helpers.pad(command.key.toLowerCase(), " ", 20)}${command.value.properties.description}" }
+                    .joinToString("\n"), 1950)
 
-        val chan = ctx.author.openPrivateChannel().await()
-        val actions = commands.map { chan.sendMessage("```\n$it```") }
-        try {
-            queueInOrder(actions)
-        } catch (e: Throwable) {
-            ctx.send("I'm unable to message you, **${ctx.author.name}** ;-;")
+            val chan = ctx.author.openPrivateChannel().await()
+            val actions = commands.map { chan.sendMessage("```\n$it```") }
+            try {
+                queueInOrder(actions)
+            } catch (e: Throwable) {
+                return ctx.send("I'm unable to message you, **${ctx.author.name}** ;-;")
+            }
+        } else {
+            val argLower = ctx.argString.toLowerCase()
+
+            val command = KawaiiBot.commandHandler.commands[argLower]
+                    ?: KawaiiBot.commandHandler.commands.values.firstOrNull { it.properties.aliases.contains(argLower) }
+                    ?: return ctx.send("That doesn't seem to be a command ;-;")
+
+            val aliases = command.properties.aliases.joinToString("|")
+            val triggers = if (aliases.isEmpty()) {
+                command.name
+            } else {
+                "[${command.name}|$aliases]"
+            }
+
+            val chan = ctx.author.openPrivateChannel().await()
+            val firstLine = "${KawaiiBot.commandHandler.prefix}$triggers"
+            chan.sendMessage("```\n$firstLine\n\n${command.properties.description}```").queue()
         }
+
+        ctx.message.addReaction("✉").queue()
     }
 }
