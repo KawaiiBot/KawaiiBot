@@ -7,7 +7,7 @@ import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
 import net.dv8tion.jda.core.Permission
 
-@Command(description = "Bans a user from the current server.", guildOnly = true, userPermissions = [Permission.BAN_MEMBERS], botPermissions = [Permission.BAN_MEMBERS])
+@Command(description = "Bans a user from the current server.", usage = " +ban <user>", guildOnly = true, userPermissions = [Permission.BAN_MEMBERS], botPermissions = [Permission.BAN_MEMBERS])
 class Ban : ICommand {
     override fun run(ctx: CommandContext) {
         val user = ctx.args.nextSnowflakeOrNull() ?: return ctx.send("Give me someone to ban ;-;")

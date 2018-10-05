@@ -8,7 +8,7 @@ import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
 import net.dv8tion.jda.core.Permission
 
-@Command(description = "Call someone a baka", botPermissions = [Permission.MESSAGE_EMBED_LINKS])
+@Command(description = "Call someone a baka",usage = "+ baka <user>", botPermissions = [Permission.MESSAGE_EMBED_LINKS])
 class Baka : ICommand {
     override fun run(ctx: CommandContext) {
         val m = ctx.args.asMember
