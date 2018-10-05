@@ -44,7 +44,9 @@ class Help : CoroutineCommand(Unconfined) {
 
             val chan = ctx.author.openPrivateChannel().await()
             val firstLine = "${KawaiiBot.commandHandler.prefix}$triggers"
-            chan.sendMessage("```\n$firstLine\n\n${command.properties.description}\n\nUsage:${command.properties.usage}```").queue()
+            val usage = command.properties.usage
+            if (usage != " No usage available") chan.sendMessage("```\n$firstLine\n\n${command.properties.description}\n\nUsage:${command.properties.usage}```").queue()
+            else chan.sendMessage("```\n$firstLine\n\n${command.properties.description}```").queue()
         }
 
         ctx.message.addReaction("✉").queue()
