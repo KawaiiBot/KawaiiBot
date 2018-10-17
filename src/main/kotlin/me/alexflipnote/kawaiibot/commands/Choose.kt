@@ -11,7 +11,7 @@ class Choose : ICommand {
     private val responses = ResourceUtil.readJson<Array<String>>("responses/choose.json")
 
     override fun run(ctx: CommandContext) {
-        val choices = ctx.args.asDisplayString.split("|").map { it.trim() }.filter { it.isNotEmpty() }
+        val choices = ctx.args.asCleanerString.split("|").map { it.trim() }.filter { it.isNotEmpty() }
         if (choices.isEmpty()) {
             return ctx.send("It looks you didn't give me any choices... (You can split your choices with `|`)")
         }

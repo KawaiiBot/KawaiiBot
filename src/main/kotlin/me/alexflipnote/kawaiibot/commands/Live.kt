@@ -42,7 +42,7 @@ class Live : ICommand {
                 val word = if (viewers == 1) "viewer" else "viewers"
 
                 ctx.sendEmbed {
-                    setTitle(ctx.args.asDisplayString)
+                    setTitle(ctx.args.asCleanerString)
                     setDescription("[**$status**](${channel.getString("url")}) (**$viewers** $word)\n\n"
                             + if (game != null) "Playing **$game**" else "")
                     setThumbnail(channel.optString("logo", ""))

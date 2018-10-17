@@ -13,7 +13,7 @@ class F : ICommand {
         val heart = Helpers.chooseRandom(hearts)
 
         if (!ctx.argString.isEmpty()) {
-            ctx.send("**${ctx.author.name}** has paid their respects for **${ctx.args.asDisplayString}** $heart")
+            ctx.send("**${ctx.author.name}** has paid their respects for **${ctx.args.asCleanerString}** $heart")
         } else {
             ctx.send("**${ctx.author.name}** has paid their respects $heart")
         }

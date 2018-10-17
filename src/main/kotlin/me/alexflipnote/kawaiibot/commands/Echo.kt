@@ -10,7 +10,7 @@ class Echo : ICommand {
         if (ctx.argString.isEmpty()) {
             ctx.send("Nothing will echo if you don't give me something to say... ;-;")
         } else {
-            ctx.send("**${ctx.author.name}**: ${ctx.args.asDisplayString}")
+            ctx.send("**${ctx.author.name}**: ${ctx.args.asCleanerString}")
         }
     }
 }
