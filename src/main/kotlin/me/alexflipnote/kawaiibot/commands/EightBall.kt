@@ -15,7 +15,7 @@ class EightBall : ICommand {
         if (ctx.argString.isEmpty()) {
             ctx.send("Give me a question please")
         } else {
-            ctx.send("\uD83C\uDFB1 **Question:** ${ctx.args.asCleanString}\n**Answer:** $responseR")
+            ctx.send("\uD83C\uDFB1 **Question:** ${ctx.args.asDisplayString}\n**Answer:** $responseR")
         }
 
     }
