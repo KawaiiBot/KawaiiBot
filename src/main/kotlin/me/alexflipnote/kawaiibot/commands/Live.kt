@@ -8,6 +8,7 @@ import me.alexflipnote.kawaiibot.utils.RequestUtil
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
+import me.aurieh.ichigo.utils.StringUtil
 import net.dv8tion.jda.core.Permission
 import java.net.URLEncoder
 
@@ -42,7 +43,7 @@ class Live : ICommand {
                 val word = if (viewers == 1) "viewer" else "viewers"
 
                 ctx.sendEmbed {
-                    setTitle(ctx.args.asCleanerString)
+                    setTitle(StringUtil.cleanContent(ctx.args.asDisplayString))
                     setDescription("[**$status**](${channel.getString("url")}) (**$viewers** $word)\n\n"
                             + if (game != null) "Playing **$game**" else "")
                     setThumbnail(channel.optString("logo", ""))

@@ -5,13 +5,14 @@ import me.alexflipnote.kawaiibot.utils.ResourceUtil
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
+import me.aurieh.ichigo.utils.StringUtil
 
 @Command(description = "Picks from a list of choices")
 class Choose : ICommand {
     private val responses = ResourceUtil.readJson<Array<String>>("responses/choose.json")
 
     override fun run(ctx: CommandContext) {
-        val choices = ctx.args.asCleanerString.split("|").map { it.trim() }.filter { it.isNotEmpty() }
+        val choices = StringUtil.cleanContent(ctx.args.asDisplayString).split("|").map { it.trim() }.filter { it.isNotEmpty() }
         if (choices.isEmpty()) {
             return ctx.send("It looks you didn't give me any choices... (You can split your choices with `|`)")
         }

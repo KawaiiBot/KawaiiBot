@@ -4,6 +4,7 @@ import me.alexflipnote.kawaiibot.utils.Helpers
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
+import me.aurieh.ichigo.utils.StringUtil
 
 @Command(description = "Consult 8ball to receive an answer", aliases = ["8ball"])
 class EightBall : ICommand {
@@ -15,7 +16,7 @@ class EightBall : ICommand {
         if (ctx.argString.isEmpty()) {
             ctx.send("Give me a question please")
         } else {
-            ctx.send("\uD83C\uDFB1 **Question:** ${ctx.args.asCleanerString}\n**Answer:** $responseR")
+            ctx.send("\uD83C\uDFB1 **Question:** ${StringUtil.cleanContent(ctx.args.asDisplayString)}\n**Answer:** $responseR")
         }
 
     }
