@@ -2,6 +2,7 @@ package me.alexflipnote.kawaiibot
 
 import com.github.natanbc.weeb4j.TokenType
 import com.github.natanbc.weeb4j.Weeb4J
+import me.alexflipnote.kawaiibot.hooks.CommandClientHook
 import me.alexflipnote.kawaiibot.utils.CommandClasspathScanner
 import me.aurieh.ichigo.core.CommandHandler
 import me.devoxin.flight.CommandClient
@@ -66,7 +67,8 @@ object KawaiiBot {
                 .setAllowMentionPrefix(true)
                 .setIgnoreBots(true)
                 .useDefaultHelpCommand(true)
-                //.addEventListeners(null) // TODO
+                .setOwnerIds(*developerIds.toLongArray())
+                .addEventListeners(CommandClientHook())
                 .registerDefaultParsers()
                 .build()
 
