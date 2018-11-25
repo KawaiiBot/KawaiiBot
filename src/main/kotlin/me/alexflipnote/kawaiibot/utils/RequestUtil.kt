@@ -1,114 +1,87 @@
 package me.alexflipnote.kawaiibot.utils
 
+import kotlinx.coroutines.future.await
 import me.alexflipnote.kawaiibot.KawaiiBot
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
 
-typealias BuilderBlock = Request.Builder.() -> Unit
+class RequestUtil {
+    private val httpClient = OkHttpClient()
 
-object RequestUtil {
-    val client = OkHttpClient.Builder().build()!!
+    inner class PendingRequest(private val request: Request) {
 
-    fun Call.wrapCallback(): CompletableFuture<Response> {
-        val fut = CompletableFuture<Response>()
-        val cb = object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                fut.completeExceptionally(e)
+        fun queue(success: (Response?) -> Unit) {
+            httpClient.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    KawaiiBot.logger.error("An error occurred during a HTTP request to ${call.request().url()}", e)
+                    success(null)
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    success(response)
+                }
+            })
+        }
+
+        suspend fun await(): Response? {
+            val future = CompletableFuture<Response?>()
+
+            queue {
+                future.complete(it)
             }
 
-            override fun onResponse(call: Call, response: Response) {
-                fut.complete(response)
-            }
-        }
-        enqueue(cb)
-        return fut
-    }
-
-    inline fun request(block: BuilderBlock): CompletableFuture<Response> {
-        return client.newCall(Request.Builder().apply(block).build()).wrapCallback()
-    }
-
-    inline fun get(url: String, block: BuilderBlock = {}) = request {
-        get()
-        url(url)
-        header("User-Agent", "KawaiiBot/${KawaiiBot.version} (https://kawaiibot.xyz)")
-        block()
-    }
-
-    inline fun post(url: String, body: RequestBody, block: BuilderBlock = {}) = request {
-        post(body)
-        url(url)
-        header("User-Agent", "KawaiiBot/${KawaiiBot.version} (https://kawaiibot.xyz)")
-        block()
-    }
-
-    fun <K, V> jsonBody(vararg pairs: Pair<K, V>): RequestBody {
-        return RequestBody.create(MediaType.APPLICATION_JSON, JSONObject(mutableMapOf(*pairs)).toString())
-    }
-
-    /**
-     * An automatically closing request body implementation
-     * **NOTE: not all methods auto-close**
-     */
-    class ClosingResponseBody(private val raw: ResponseBody) : AutoCloseable {
-        private var closed = false
-
-        /**
-         * Get a string representation of the body
-         * This method buffers the entire body in-memory
-         * and then closes the stream.
-         *
-         * @return body as a [kotlin.String]
-         */
-        fun string() = isValid { raw.string() }
-
-        /**
-         * Get a bytestream representation of the body
-         * This method does not do any buffering and you
-         * have to close the stream on your own.
-         *
-         * @return body as an [java.io.InputStream]
-         */
-        fun byteStream() = raw.byteStream()
-
-        /**
-         * Get a byte array representation of the body
-         * This method buffers the entire body in-memory
-         * and then closes the stream.
-         *
-         * @return body as a [kotlin.ByteArray]
-         */
-        fun bytes() = isValid { raw.bytes() }
-
-        /**
-         * Get a character stream representation of the body
-         * This method does not do any buffer and you
-         * have to close the stream on your own.
-         *
-         * @return body as a [java.io.Reader]
-         */
-        fun charStream() = raw.charStream()
-
-        fun source() = raw.source()
-
-        fun contentLength() = raw.contentLength()
-
-        fun contentType() = raw.contentType()
-
-        override fun close() {
-            closed = true
-            raw.close()
+            return future.await()
         }
 
-        private inline fun <T : Any> isValid(calc: () -> T): T {
-            if (closed) throw IllegalStateException("already closed")
-            use { return calc() }
+    }
+
+    public fun get(url: String, headers: Headers = Headers.of()): PendingRequest {
+        return request {
+            url(url)
+            headers(headers)
         }
     }
 
-    object MediaType {
-        val APPLICATION_JSON = okhttp3.MediaType.parse("application/json")
+    public fun post(url: String, body: RequestBody, headers: Headers): PendingRequest {
+        return request {
+            url(url)
+            headers(headers)
+            post(body)
+        }
+    }
+
+    public fun request(builder: Request.Builder.() -> Unit): PendingRequest {
+        val request = Request.Builder()
+                .header("User-Agent", "KawaiiBot (https://github.com/KawaiiBot/KawaiiBot)")
+                .apply(builder)
+                .build()
+
+        return PendingRequest(request)
     }
 }
+
+fun Response.json(): JSONObject? {
+    val body = body()
+
+    body().use {
+        return if (isSuccessful && body != null) {
+            JSONObject(body()!!.string())
+        } else {
+            null
+        }
+    }
+}
+
+public fun createHeaders(vararg kv: Pair<String, String>): Headers {
+    val builder = Headers.Builder()
+
+    for (header in kv) {
+        builder.add(header.first, header.second)
+    }
+
+    return builder.build()
+}
+
+fun MediaType.APPLICATION_JSON(): MediaType = okhttp3.MediaType.parse("application/json")!!
