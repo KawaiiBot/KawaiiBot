@@ -33,7 +33,7 @@ repositories {
 }
 
 dependencies {
-    compile ('net.dv8tion:JDA:3.8.1_438') {
+    compile ('net.dv8tion:JDA:3.8.1_447') {
         exclude module: 'opus-java'
     }
     compile 'com.github.Devoxin:Flight:8683e2e'
