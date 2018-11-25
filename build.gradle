@@ -37,7 +37,6 @@ dependencies {
         exclude module: 'opus-java'
     }
     compile 'com.github.Devoxin:Flight:8683e2e'
-    compile 'com.github.natanbc:weeb4j:2.1'
     compile 'com.squareup.okhttp3:okhttp:3.9.1'
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile 'org.apache.commons:commons-text:1.3'
