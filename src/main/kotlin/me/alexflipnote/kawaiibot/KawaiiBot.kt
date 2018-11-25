@@ -6,6 +6,7 @@ import me.devoxin.flight.CommandClient
 import me.devoxin.flight.CommandClientBuilder
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.bot.sharding.ShardManager
+import me.alexflipnote.kawaiibot.hooks.CommandClientHook
 import net.dv8tion.jda.core.entities.Game
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
@@ -64,7 +65,8 @@ object KawaiiBot {
                 .setAllowMentionPrefix(true)
                 .setIgnoreBots(true)
                 .useDefaultHelpCommand(true)
-                //.addEventListeners(null) // TODO
+                .setOwnerIds(*developerIds.toLongArray())
+                .addEventListeners(CommandClientHook())
                 .registerDefaultParsers()
                 .build()
 
