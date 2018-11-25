@@ -3,8 +3,6 @@ package me.alexflipnote.kawaiibot
 import com.github.natanbc.weeb4j.TokenType
 import com.github.natanbc.weeb4j.Weeb4J
 import me.alexflipnote.kawaiibot.hooks.CommandClientHook
-import me.alexflipnote.kawaiibot.utils.CommandClasspathScanner
-import me.aurieh.ichigo.core.CommandHandler
 import me.devoxin.flight.CommandClient
 import me.devoxin.flight.CommandClientBuilder
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
