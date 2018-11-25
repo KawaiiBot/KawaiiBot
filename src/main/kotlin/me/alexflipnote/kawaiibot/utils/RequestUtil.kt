@@ -54,7 +54,7 @@ class RequestUtil {
 
     public fun request(builder: Request.Builder.() -> Unit): PendingRequest {
         val request = Request.Builder()
-                .header("User-Agent", "KawaiiBot (https://github.com/KawaiiBot/KawaiiBot)")
+                .header("User-Agent", "KawaiiBot/${KawaiiBot.version} (https://kawaiibot.xyz)")
                 .apply(builder)
                 .build()
 

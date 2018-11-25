@@ -3,11 +3,12 @@ package me.alexflipnote.kawaiibot
 import com.github.natanbc.weeb4j.TokenType
 import com.github.natanbc.weeb4j.Weeb4J
 import me.alexflipnote.kawaiibot.hooks.CommandClientHook
+import me.alexflipnote.kawaiibot.utils.RequestUtil
+import me.alexflipnote.kawaiibot.utils.WeebApi
 import me.devoxin.flight.CommandClient
 import me.devoxin.flight.CommandClientBuilder
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.bot.sharding.ShardManager
-import me.alexflipnote.kawaiibot.hooks.CommandClientHook
 import net.dv8tion.jda.core.entities.Game
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
@@ -28,9 +29,9 @@ object KawaiiBot {
 
     lateinit var shardManager: ShardManager
     lateinit var commandHandler: CommandClient
-    lateinit var httpClient: OkHttpClient
-    lateinit var wolkeApi: Weeb4J
     lateinit var embedColor: Color
+    lateinit var wolkeApi: WeebApi
+    public val httpClient = RequestUtil()
 
     var otherCommandUsage = 0
     var pornUsage = 0
@@ -50,16 +51,10 @@ object KawaiiBot {
         val wolkeApiKey = config.getProperty("wolke")
         embedColor = Color.decode(config.getProperty("color", "0xC29FAF"))
 
-        // TODO: Consider dumping weeb4j in favour of our own wrapper.
         if (wolkeApiKey != null) {
             logger.info("Wolke API key present, enabling Weeb4J...")
-            wolkeApi = Weeb4J.Builder()
-                    .setToken(TokenType.WOLKE, wolkeApiKey)
-                    .setUserAgent("KawaiiBot/$version (https://kawaiibot.xyz)")
-                    .build()
+            wolkeApi = WeebApi(wolkeApiKey)
         }
-
-        httpClient = OkHttpClient.Builder().build()
 
         commandHandler = CommandClientBuilder()
                 .setPrefixes(defaultPrefix)
