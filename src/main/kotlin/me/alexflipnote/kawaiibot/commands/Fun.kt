@@ -37,6 +37,7 @@ class Fun : Cog {
             else
                 ctx.send("You win! ✂\n**$choice** cut **$selected**")
         }
+
     }
 
 

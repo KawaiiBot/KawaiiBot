@@ -10,6 +10,8 @@ import me.alexflipnote.kawaiibot.utils.Helpers
 import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Member
 import me.alexflipnote.kawaiibot.entities.Responses
+import me.devoxin.flight.arguments.Greedy
+import me.devoxin.flight.arguments.Optional
 import net.dv8tion.jda.core.JDA
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
@@ -40,6 +42,12 @@ class Misc : Cog {
             val end = System.currentTimeMillis()
             m.editMessage("WS: ${ctx.jda.ping}ms | REST: ${end - start}ms").queue()
         }
+    }
+
+    @Command(description = "Displays your avatar")
+    fun avatar(ctx: Context, @Name("user") @Optional @Greedy user: Member?) {
+        val member = user?.user ?: ctx.author
+        ctx.send("${member.name}'s Avatar\n${member.effectiveAvatarUrl}?size=1024")
     }
 
     @Command(description = "View internal information")

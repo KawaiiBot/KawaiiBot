@@ -1,7 +1,6 @@
 package me.alexflipnote.kawaiibot
 
-import com.github.natanbc.weeb4j.TokenType
-import com.github.natanbc.weeb4j.Weeb4J
+
 import me.alexflipnote.kawaiibot.hooks.CommandClientHook
 import me.alexflipnote.kawaiibot.utils.RequestUtil
 import me.alexflipnote.kawaiibot.utils.WeebApi
@@ -51,7 +50,7 @@ object KawaiiBot {
         val wolkeApiKey = config.getProperty("wolke")
         embedColor = Color.decode(config.getProperty("color", "0xC29FAF"))
 
-        if (wolkeApiKey != null) {
+       if (wolkeApiKey != null) {
             logger.info("Wolke API key present, enabling Weeb4J...")
             wolkeApi = WeebApi(wolkeApiKey)
         }
