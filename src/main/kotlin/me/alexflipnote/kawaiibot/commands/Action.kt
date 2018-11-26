@@ -67,7 +67,7 @@ class Action : Cog {
             ctx.send("Who are you calling a baka...?")
         }
         if (target?.user?.idLong == ctx.jda.selfUser.idLong) {
-            ctx.send("**${ctx.author.name}** how could you :'(")
+            ctx.send("**${ctx.author.asMention}** how could you :'(")
         }
         if (target?.user?.idLong == ctx.author.idLong) {
             // ctx.channel.sendFile(Helpers.getImageStream("images/selfbaka.jpg"), "selfbaka.jpg").queue() Not sure how flights upload system works yet.
@@ -78,6 +78,49 @@ class Action : Cog {
                     setColor(KawaiiBot.embedColor)
                     setImage(image?.url)
                 }
+            }
+        }
+    }
+
+    @Command(description = "Posts a crying picture when you're sad ;-;")
+    fun cry(ctx: Context) {
+        api.getRandomImage("cry").queue { image ->
+            ctx.embed {
+                setColor(KawaiiBot.embedColor)
+                setImage(image?.url)
+            }
+        }
+    }
+
+    @Command(description = "Dab on haters")
+    fun dab(ctx: Context) {
+        val comments = arrayOf("Dabs on haters", "Dabbing is so 2016", "#DabIsNotDead")
+        val comment = Helpers.chooseRandom(comments)
+        api.getRandomImage("dab").queue { image ->
+            ctx.embed {
+                setColor(KawaiiBot.embedColor)
+                setDescription("**$comment**")
+                setImage(image?.url)
+            }
+        }
+    }
+
+    @Command(description = "Posts a dancing image, get down and boogie")
+    fun dance(ctx: Context) {
+        api.getRandomImage("dance").queue { image ->
+            ctx.embed {
+                setColor(KawaiiBot.embedColor)
+                setImage(image?.url)
+            }
+        }
+    }
+
+    @Command(description = "Displays a random discord meme")
+    fun discordmeme(ctx: Context) {
+        api.getRandomImage("discord_memes").queue { image ->
+            ctx.embed {
+                setColor(KawaiiBot.embedColor)
+                setImage(image?.url)
             }
         }
     }

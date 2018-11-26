@@ -88,6 +88,11 @@ class Misc : Cog {
         ctx.send(sb.toString())
     }
 
+    @Command(description = "Invite me to your server :3")
+    fun invite(ctx: Context) {
+        ctx.send("Invite me with this link \uD83C\uDF80\n<https://discordapp.com/oauth2/authorize?client_id=195244341038546948&scope=bot>")
+    }
+
     override fun name(): String {
         return "Misc"
     }
