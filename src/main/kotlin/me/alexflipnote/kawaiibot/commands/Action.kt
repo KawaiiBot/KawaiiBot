@@ -6,126 +6,86 @@ import me.devoxin.flight.Context
 import me.devoxin.flight.annotations.Command
 import me.devoxin.flight.arguments.Greedy
 import me.devoxin.flight.arguments.Name
-import me.devoxin.flight.arguments.Optional
+import me.devoxin.flight.models.Attachment
 import me.devoxin.flight.models.Cog
-import net.dv8tion.jda.core.JDAInfo
-import me.devoxin.flight.parsers.MemberParser
 import net.dv8tion.jda.core.entities.Member
-import me.alexflipnote.kawaiibot.utils.WeebApi
-import net.dv8tion.jda.core.MessageBuilder
 
 class Action : Cog {
 
-    val api = KawaiiBot.wolkeApi
+    private val dabComments = arrayOf("Dabs on haters", "Dabbing is so 2016", "#DabIsNotDead")
 
-    @Command(description = "Hold the hand of someone :3")
-    fun handhold(ctx: Context, @Name("target") target: Member?) {
-        val image = api.getRandomImage("handholding")
-        if (target?.user?.idLong == null) {
-            ctx.send("Are you trying to hold the hand of the ghost...?")
-        }
-        if (target?.user?.idLong == ctx.jda.selfUser.idLong) {
-            ctx.send("*Holds **${ctx.author.name}**'s hand back*")
-        }
-        if (target?.user?.idLong == ctx.author.idLong) {
-            ctx.send("Sorry to see you alone ;-;")
-        } else {
-            api.getRandomImage("handholding").queue { image ->
-                ctx.embed {
-                    setDescription("**${target?.user?.name}**, **${ctx.author.name}** is holding your hand")
-                    setColor(KawaiiBot.embedColor)
-                    setImage(image?.url)
-                }
+    private fun sendAction(ctx: Context, target: Member?, type: String, action: String?) {
+        KawaiiBot.wolkeApi.getRandomImage(action).queue {
+            if (it == null) {
+                return@queue ctx.send("I-I couldn't find a $type image... I'm sorry ;-;")
+            }
+
+            val formattedAction = if (target != null && action != null)
+                String.format(action, target.user.name, ctx.author.name)
+            else action
+
+            ctx.embed {
+                setDescription(formattedAction)
+                setColor(KawaiiBot.embedColor)
+                setImage(it.url)
             }
         }
+    }
+
+    @Command(description = "Hold the hand of someone :3")
+    fun handhold(ctx: Context, @Name("target") @Greedy target: Member) {
+        if (target.user.idLong == ctx.jda.selfUser.idLong) {
+            return ctx.send("*Holds **${ctx.author.name}**'s hand back*")
+        }
+
+        if (target.user.idLong == ctx.author.idLong) {
+            return ctx.send("Sorry to see you alone ;-;")
+        }
+
+        sendAction(ctx, target, "handholding", "**%s**, **%s** is holding your hand")
     }
 
     @Command(description = "Give someone a hug o////o")
-    fun hug(ctx: Context, @Name("target") target: Member?) {
-        if (target?.user?.idLong == null) {
-            ctx.send("Are you trying to hug thin air...?")
+    fun hug(ctx: Context, @Name("target") @Greedy target: Member) {
+        if (target.user.idLong == ctx.jda.selfUser.idLong) {
+            return ctx.send("*Hugs **${ctx.author.name}** back* ❤")
         }
-        if (target?.user?.idLong == ctx.jda.selfUser.idLong) {
-            ctx.send("*Hugs **${ctx.author.name}** back* ❤")
+
+        if (target.user.idLong == ctx.author.idLong) {
+            return ctx.send("Sorry to see you alone...")
         }
-        if (target?.user?.idLong == ctx.author.idLong) {
-            ctx.send("Sorry to see you alone...")
-        } else {
-            api.getRandomImage("hug").queue { image ->
-                ctx.embed {
-                    setDescription("**${target?.effectiveName}**, you got a hug from **${ctx.author.name}**")
-                    setColor(KawaiiBot.embedColor)
-                    setImage(image?.url)
-                }
-            }
-        }
+
+        sendAction(ctx, target, "hug", "**%s**, you got a hug from **%s**")
     }
 
     @Command(description = "Call someone a baka")
-    fun baka(ctx: Context, @Name("target") target: Member?) {
-        if (target?.user?.idLong == null) {
-            ctx.send("Who are you calling a baka...?")
+    fun baka(ctx: Context, @Name("target") @Greedy target: Member) {
+        if (target.user.idLong == ctx.jda.selfUser.idLong) {
+            return ctx.send("**${ctx.author.asMention}** how could you :'(")
         }
-        if (target?.user?.idLong == ctx.jda.selfUser.idLong) {
-            ctx.send("**${ctx.author.asMention}** how could you :'(")
+
+        if (target.user.idLong == ctx.author.idLong) {
+            return ctx.upload(
+                    Attachment.from(Helpers.getImageStream("images/selfbaka.jpg"), "selfbaka.jpg")
+            )
         }
-        if (target?.user?.idLong == ctx.author.idLong) {
-            // ctx.channel.sendFile(Helpers.getImageStream("images/selfbaka.jpg"), "selfbaka.jpg").queue() Not sure how flights upload system works yet.
-        } else {
-            api.getRandomImage("baka").queue { image ->
-                ctx.embed {
-                    setDescription("**${ctx.author.name}**, called **${target?.user?.name}** a baka")
-                    setColor(KawaiiBot.embedColor)
-                    setImage(image?.url)
-                }
-            }
-        }
+
+        sendAction(ctx, target, "baka", "**%s**, **%s** called you a baka")
     }
 
     @Command(description = "Posts a crying picture when you're sad ;-;")
-    fun cry(ctx: Context) {
-        api.getRandomImage("cry").queue { image ->
-            ctx.embed {
-                setColor(KawaiiBot.embedColor)
-                setImage(image?.url)
-            }
-        }
-    }
+    fun cry(ctx: Context) = sendAction(ctx, null, "cry", null)
 
     @Command(description = "Dab on haters")
     fun dab(ctx: Context) {
-        val comments = arrayOf("Dabs on haters", "Dabbing is so 2016", "#DabIsNotDead")
-        val comment = Helpers.chooseRandom(comments)
-        api.getRandomImage("dab").queue { image ->
-            ctx.embed {
-                setColor(KawaiiBot.embedColor)
-                setDescription("**$comment**")
-                setImage(image?.url)
-            }
-        }
+        val comment = Helpers.chooseRandom(dabComments)
+        sendAction(ctx, null, "dab", "**$comment**")
     }
 
     @Command(description = "Posts a dancing image, get down and boogie")
-    fun dance(ctx: Context) {
-        api.getRandomImage("dance").queue { image ->
-            ctx.embed {
-                setColor(KawaiiBot.embedColor)
-                setImage(image?.url)
-            }
-        }
-    }
+    fun dance(ctx: Context) = sendAction(ctx, null, "dance", null)
 
     @Command(description = "Displays a random discord meme")
-    fun discordmeme(ctx: Context) {
-        api.getRandomImage("discord_memes").queue { image ->
-            ctx.embed {
-                setColor(KawaiiBot.embedColor)
-                setImage(image?.url)
-            }
-        }
-    }
+    fun discordmeme(ctx: Context) = sendAction(ctx, null, "discord_memes", null)
 
-    override fun name(): String {
-        return "Action"
-    }
 }

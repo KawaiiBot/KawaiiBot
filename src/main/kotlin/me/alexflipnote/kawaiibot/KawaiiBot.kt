@@ -9,7 +9,6 @@ import me.devoxin.flight.CommandClientBuilder
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.bot.sharding.ShardManager
 import net.dv8tion.jda.core.entities.Game
-import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import java.awt.Color
 import java.io.FileInputStream
@@ -50,7 +49,7 @@ object KawaiiBot {
         val wolkeApiKey = config.getProperty("wolke")
         embedColor = Color.decode(config.getProperty("color", "0xC29FAF"))
 
-       if (wolkeApiKey != null) {
+        if (wolkeApiKey != null) {
             logger.info("Wolke API key present, enabling Weeb4J...")
             wolkeApi = WeebApi(wolkeApiKey)
         }

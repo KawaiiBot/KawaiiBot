@@ -1,22 +1,22 @@
 package me.alexflipnote.kawaiibot.commands
 
 import me.alexflipnote.kawaiibot.KawaiiBot
-import me.devoxin.flight.Context
-import me.devoxin.flight.models.Cog
-import me.devoxin.flight.annotations.Command
-import me.devoxin.flight.arguments.Name
 import me.alexflipnote.kawaiibot.utils.Helpers
-
+import me.devoxin.flight.Context
+import me.devoxin.flight.annotations.Command
+import me.devoxin.flight.arguments.Greedy
+import me.devoxin.flight.arguments.Name
+import me.devoxin.flight.arguments.Optional
+import me.devoxin.flight.models.Cog
+import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Member
-import me.alexflipnote.kawaiibot.entities.Responses
-import me.devoxin.flight.arguments.Greedy
-import me.devoxin.flight.arguments.Optional
-import net.dv8tion.jda.core.JDA
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class Misc : Cog {
+
+    private val dpFormatter = DecimalFormat("0.00")
 
     @Command(description = "About me~")
     fun about(ctx: Context) {
@@ -30,7 +30,7 @@ class Misc : Cog {
     }
 
     @Command(description = "Posts a link to the official Patreon", aliases = ["support", "patreon"])
-    fun donate(ctx: Context){
+    fun donate(ctx: Context) {
         ctx.send("You can support me here \uD83C\uDF80\n**<https://www.patreon.com/KawaiiBot>**")
     }
 
@@ -44,7 +44,7 @@ class Misc : Cog {
         }
     }
 
-    @Command(description = "Displays your avatar")
+    @Command(description = "Displays your, or another user's avatar")
     fun avatar(ctx: Context, @Name("user") @Optional @Greedy user: Member?) {
         val member = user?.user ?: ctx.author
         ctx.send("${member.name}'s Avatar\n${member.effectiveAvatarUrl}?size=1024")
@@ -52,7 +52,6 @@ class Misc : Cog {
 
     @Command(description = "View internal information")
     fun stats(ctx: Context) {
-        val dpFormatter = DecimalFormat("0.00")
         val uptime = Helpers.parseTime(KawaiiBot.uptime())
         val ramUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
         val ramUsedMB = ramUsedRaw / 1048576
@@ -67,6 +66,7 @@ class Misc : Cog {
         val formattedCPS = dpFormatter.format(commandsPerSecond)
 
         val sb = StringBuilder()
+
         sb.append("```prolog\n")
         sb.append("=== KawaiiBot Statistics ===")
         sb.append("\n\nPROCESS STATISTICS\n")
@@ -80,11 +80,14 @@ class Misc : Cog {
         sb.append("• Normal Cmds   :: ${KawaiiBot.otherCommandUsage}\n")
         sb.append("  • Per Second  :: $formattedCPS\n\n")
         sb.append("• Shards Online :: $onlineShards/$shardCount\n")
+
         if (deadShards.isNotEmpty()) {
             sb.append("  - ${deadShards.map { it.shardInfo.shardId }.sorted().joinToString(" ")}\n")
         }
+
         sb.append("• Average Ping  :: ${averageShardLatency}ms\n")
         sb.append("```")
+
         ctx.send(sb.toString())
     }
 
@@ -93,7 +96,4 @@ class Misc : Cog {
         ctx.send("Invite me with this link \uD83C\uDF80\n<https://discordapp.com/oauth2/authorize?client_id=195244341038546948&scope=bot>")
     }
 
-    override fun name(): String {
-        return "Misc"
-    }
 }
