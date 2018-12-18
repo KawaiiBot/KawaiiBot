@@ -76,6 +76,9 @@ class Action : Cog {
     @Command(description = "Posts a crying picture when you're sad ;-;")
     fun cry(ctx: Context) = sendAction(ctx, null, "cry", null)
 
+    @Command(description = "Posts a blushing picture when you just can't hold it >w<")
+    fun blush(ctx: Context) = sendAction(ctx, null, "blush", null)
+
     @Command(description = "Dab on haters")
     fun dab(ctx: Context) {
         val comment = Helpers.chooseRandom(dabComments)
