@@ -44,12 +44,21 @@ class Urban : ICommand {
                     if (defs.length() == 0) {
                         return@thenAccept ctx.send("Couldn't find your search in the dictionary...")
                     }
-                    val def = defs.getJSONObject(0) // maybe random?
-                    if (def.getString("definition").length > 1024) {
-                        val permalink = def.getString("permalink")
+                    var max = defs.getJSONObject(0)
+                    var maxthumbs = max.getInt("thumbs_up")
+                    for (i in 1..(defs.length() - 1)) {
+                      val def = defs.getJSONObject(i)
+                      val thumbsup = def.getInt("thumbs_up")
+                      if (thumbsup > maxthumbs){
+                        max = def
+                        maxthumbs = thumbsup
+                      }
+                    }
+                    if (max.getString("definition").length > 1024) {
+                        val permalink = max.getString("permalink")
                         return@thenAccept ctx.send("The definition is too big for Discord, check it out here $permalink")
                     }
-                    val embed = prepObject(def)
+                    val embed = prepObject(max)
                     ctx.sendEmbed(embed)
                 }
                 .thenException {
