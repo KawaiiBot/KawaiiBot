@@ -12,9 +12,9 @@ class F : ICommand {
 
     override fun run(ctx: CommandContext) {
         val heart = Helpers.chooseRandom(hearts)
-
-        if (!ctx.argString.isEmpty()) {
-            ctx.send("**${ctx.author.name}** has paid their respects for **${StringUtil.cleanContent(ctx.args.asDisplayString)}** $heart")
+        val reason = ctx.args.collect()
+        if (!reason.isEmpty()) {
+            ctx.send("**${ctx.author.name}** has paid their respects for **${StringUtil.cleanerContent(reason)}** $heart")
         } else {
             ctx.send("**${ctx.author.name}** has paid their respects $heart")
         }
