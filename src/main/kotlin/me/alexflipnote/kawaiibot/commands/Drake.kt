@@ -9,14 +9,16 @@ import okhttp3.RequestBody
 
 @Command(description = "Make a dank, drake meme", guildOnly = true, botPermissions = [Permission.MESSAGE_ATTACH_FILES])
 class Drake : AbstractAPICommand() {
-    override val path = "/image/drake"
+    override val path = "/drake"
 
-    override fun makeBody(ctx: CommandContext): RequestBody? {
+    /* NOTE: Fix for later
+    override fun makeArgument(ctx: CommandContext): String {
         val args = ctx.argString.split("|")
-        if (args.size != 2) return failBody {
+        if (args.size != 2) {
             ctx.send("You need to specify top and body text (split using `|`) ;-;")
+            return ""
         }
 
-        return RequestUtil.jsonBody("top" to args[0], "bottom" to args[1])
-    }
+        return "top=${args[0]}&bottom=${args[1]}"
+    }*/
 }

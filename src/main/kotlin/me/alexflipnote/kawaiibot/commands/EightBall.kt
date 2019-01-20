@@ -12,11 +12,12 @@ class EightBall : ICommand {
 
     override fun run(ctx: CommandContext) {
         val responseR = Helpers.chooseRandom(responses)
+        val question = ctx.args.collect()
 
-        if (ctx.argString.isEmpty()) {
+        if (question.isEmpty()) {
             ctx.send("Give me a question please")
         } else {
-            ctx.send("\uD83C\uDFB1 **Question:** ${StringUtil.cleanContent(ctx.args.asDisplayString)}\n**Answer:** $responseR")
+            ctx.send("\uD83C\uDFB1 **Question:** ${StringUtil.cleanContent(question)}\n**Answer:** $responseR")
         }
 
     }

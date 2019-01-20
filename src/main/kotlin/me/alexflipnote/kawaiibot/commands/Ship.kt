@@ -18,8 +18,8 @@ class Ship : ICommand { // TODO: convert to AbstractAPICommand
 
         val firstPart = first.name.substring(0, first.name.length / 2)
         val secondPart = second.name.substring(second.name.length / 2)
-        val body = RequestUtil.jsonBody("user1" to first.effectiveAvatarUrl, "user2" to second.effectiveAvatarUrl)
-        RequestUtil.post("${KawaiiBot.config.getProperty("api_url")}/image/ship", body).thenAccept {
+        val avatars = "?user=${first.effectiveAvatarUrl}&user2=${second.effectiveAvatarUrl}"
+        RequestUtil.get("${KawaiiBot.config.getProperty("api_url")}/ship$avatars").thenAccept {
             val inputStream = it.closing()?.byteStream() ?: return@thenAccept ctx.send("Got empty response")
             ctx.channel.sendMessage("Lovely shipping~\nShip name: **$firstPart$secondPart**")
                     .addFile(inputStream, "ship.png")

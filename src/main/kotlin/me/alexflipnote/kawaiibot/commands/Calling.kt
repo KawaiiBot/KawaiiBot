@@ -6,5 +6,5 @@ import net.dv8tion.jda.core.Permission
 
 @Command(description = "Tom & Jerry calling meme generator", botPermissions = [Permission.MESSAGE_ATTACH_FILES])
 class Calling : AbstractAPICommand() {
-    override val path = "/image/calling"
+    override val path = "/calling"
 }

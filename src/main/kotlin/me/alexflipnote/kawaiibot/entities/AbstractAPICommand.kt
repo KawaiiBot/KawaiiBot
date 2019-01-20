@@ -12,13 +12,13 @@ abstract class AbstractAPICommand : ICommand {
     abstract val path: String
     open val blankResponse = "You want to make a blank ${this.javaClass.simpleName.toLowerCase()}...?"
 
-    open fun makeBody(ctx: CommandContext): RequestBody? {
-        return RequestUtil.jsonBody("text" to ctx.argString)
-    }
-
     inline fun failBody(block: () -> Unit): RequestBody? {
         block()
         return null
+    }
+
+    open fun makeArgument(ctx: CommandContext): String {
+        return "text=${ctx.argString}"
     }
 
     open fun checkBlank(ctx: CommandContext): Boolean {
@@ -29,12 +29,12 @@ abstract class AbstractAPICommand : ICommand {
         if (checkBlank(ctx))
             return ctx.send(blankResponse)
 
-        val body = makeBody(ctx) ?: return
+        val args = makeArgument(ctx)
 
-        RequestUtil.post("${KawaiiBot.config.getProperty("api_url")}$path", body).thenAccept {
+        RequestUtil.get("${KawaiiBot.config.getProperty("api_url")}$path?$args").thenAccept {
             val body = it.closing()
             if (!it.isSuccessful) {
-                KawaiiBot.LOG.error("bad response status code ${it.code()}, body ${body?.string()}")
+                KawaiiBot.LOG.error("bad response status code ${it.code()}, args ?$args")
                 ctx.send("There was an error creating the image, try again later.")
             } else if (body == null) {
                 ctx.send("I couldn't create the image ;-;")

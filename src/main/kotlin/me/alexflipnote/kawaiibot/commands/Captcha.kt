@@ -6,5 +6,5 @@ import net.dv8tion.jda.core.Permission
 
 @Command(description = "Prove someone with a captcha", botPermissions = [Permission.MESSAGE_ATTACH_FILES])
 class Captcha : AbstractAPICommand() {
-    override val path = "/image/captcha"
+    override val path = "/captcha"
 }

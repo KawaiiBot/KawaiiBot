@@ -15,7 +15,8 @@ class Weather : ICommand { // TODO: convert to AbstractAPICommand
         if (ctx.argString.isEmpty())
             return ctx.send("You should probably write where you want to check the weather?")
 
-        RequestUtil.post("${KawaiiBot.config.getProperty("api_url")}/image/weather", RequestUtil.jsonBody("text" to ctx.argString)).thenAccept {
+        RequestUtil.get("${KawaiiBot.config.getProperty("api_url")}/weather?location=${ctx.argString}").thenAccept {
+            it.header("Authorization", KawaiiBot.config.getProperty("api_token"))
             val body = it.closing()
             if (body == null)
                 ctx.send("I couldn't find this place, try again? (Maybe with **City, Country**)")
