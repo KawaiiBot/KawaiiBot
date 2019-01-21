@@ -23,7 +23,7 @@ class Misc : Cog {
     @Command(description = "About me~")
     fun about(ctx: Context) {
         ctx.embed {
-            setTitle("ℹ KawaiiBot v${KawaiiBot.KAWAIIBOT_VERSION}")
+            setTitle("ℹ KawaiiBot v${KawaiiBot.VERSION}")
             addField("Developers", "AlexFlipnote, Devoxin, Yvan & Aurieh", false)
             addField("Library", "JDA ${JDAInfo.VERSION}", true)
             addField("My Server!", "https://discord.gg/wGwgWJW", true)
