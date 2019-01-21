@@ -11,18 +11,20 @@ import me.devoxin.flight.models.Cog
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Member
+import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactory
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class Misc : Cog {
 
     private val dpFormatter = DecimalFormat("0.00")
+    private val engine = KotlinJsr223JvmLocalScriptEngineFactory().scriptEngine
 
     @Command(description = "About me~")
     fun about(ctx: Context) {
         ctx.embed {
-            setTitle("ℹ KawaiiBot v${KawaiiBot.version}")
-            addField("Developers", "AlexFlipnote, Kromatic, Yvan & Aurieh", false)
+            setTitle("ℹ KawaiiBot v${KawaiiBot.KAWAIIBOT_VERSION}")
+            addField("Developers", "AlexFlipnote, Devoxin, Yvan & Aurieh", false)
             addField("Library", "JDA ${JDAInfo.VERSION}", true)
             addField("My Server!", "https://discord.gg/wGwgWJW", true)
             setThumbnail(ctx.jda.selfUser.effectiveAvatarUrl)
@@ -94,6 +96,32 @@ class Misc : Cog {
     @Command(description = "Invite me to your server :3")
     fun invite(ctx: Context) {
         ctx.send("Invite me with this link \uD83C\uDF80\n<https://discordapp.com/oauth2/authorize?client_id=195244341038546948&scope=bot>")
+    }
+
+    @Command(description = "Evaluates Java code", developerOnly = true)
+    fun eval(ctx: Context, @Name("code") @Greedy code: String) {
+        val bindings = mapOf(
+                "ctx" to ctx,
+                "jda" to ctx.jda,
+                "kb" to KawaiiBot,
+                "sm" to KawaiiBot.shardManager,
+                "cc" to KawaiiBot.commandHandler
+        )
+
+        val bindString = bindings.map { "val ${it.key} = bindings[\"${it.key}\"] as ${it.value.javaClass.kotlin.qualifiedName}" }.joinToString("\n")
+        val bind = engine.createBindings()
+        bind.putAll(bindings)
+
+        try {
+            val result = engine.eval("$bindString\n$code", bind)
+            ctx.messageChannel.sendMessage("```\n$result```").queue(null) {
+                ctx.send("I couldn't send the output ;-;\n```\n$it```")
+            }
+        } catch (e: Exception) {
+            ctx.messageChannel.sendMessage("There was an error during eval...\n```\n$e```").queue(null) {
+                ctx.send("There was an error during eval, but I couldn't send the stacktrace... ;-;\n```\n$it```")
+            }
+        }
     }
 
 }

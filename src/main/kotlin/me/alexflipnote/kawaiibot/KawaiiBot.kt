@@ -18,7 +18,7 @@ import javax.security.auth.login.LoginException
 
 object KawaiiBot {
 
-    const val version = "3.3.0"
+    const val KAWAIIBOT_VERSION = "3.3.0"
     private val bootTime = System.currentTimeMillis()
     val developerIds = setOf(86477779717066752L, 180093157554388993L, 261912303132344320L, 115076505549144067L)
     val logger = LoggerFactory.getLogger("KawaiiBot")
