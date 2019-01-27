@@ -12,8 +12,8 @@ import me.aurieh.ichigo.core.annotations.Command
 class Birb : ICommand {
     override fun run(ctx: CommandContext) {
         RequestUtil.get("https://api.alexflipnote.xyz/birb").thenAccept {
-            val res = it.json()?.getString("file")
-            ctx.send("$res")
+            val res = it.json()?.getString("file") ?: "I couldn't find any birbs ;-;'"
+            ctx.send(res)
         }.thenException {
             ctx.send("I-I couldn't find any birbs... I'm sorry ;-;")
         }
