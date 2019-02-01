@@ -28,7 +28,7 @@ class LoveCalc : ICommand {
         }
 
         random.setSeed(first.idLong + second.idLong)
-        val percent = random.nextInt(100)
+        val percent = random.nextInt(101)
 
         ctx.sendEmbed {
             setTitle("❤ Love Calculator ❤")
