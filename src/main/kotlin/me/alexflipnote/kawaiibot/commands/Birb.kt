@@ -11,7 +11,7 @@ import me.aurieh.ichigo.core.annotations.Command
 @Command(description = "Cute birbs :3")
 class Birb : ICommand {
     override fun run(ctx: CommandContext) {
-        RequestUtil.get("https://api.alexflipnote.xyz/birb").thenAccept {
+        RequestUtil.get("https://api.alexflipnote.dev/birb").thenAccept {
             val res = it.json()?.getString("file") ?: "I couldn't find any birbs ;-;'"
             ctx.send(res)
         }.thenException {

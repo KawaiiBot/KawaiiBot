@@ -11,14 +11,13 @@ import okhttp3.RequestBody
 class Drake : AbstractAPICommand() {
     override val path = "/drake"
 
-    /* NOTE: Fix for later
     override fun makeArgument(ctx: CommandContext): String {
-        val args = ctx.argString.split("|")
+        val args = ctx.argString.split(" | ")
         if (args.size != 2) {
             ctx.send("You need to specify top and body text (split using `|`) ;-;")
             return ""
         }
 
         return "top=${args[0]}&bottom=${args[1]}"
-    }*/
+    }
 }
