@@ -10,8 +10,8 @@ import net.dv8tion.jda.core.Permission
 @Command(description = "Give someone a beer!", botPermissions = [Permission.MESSAGE_EXT_EMOJI], guildOnly = true)
 class Beer : ICommand {
     private val friends = "<:bolbbeerL:344171498115694611><:bolbbeerR:344171508832272384>"
-    private val lone = "<:bolbbeer:366890035561365504>"
-
+    private val lone = "<:bolbbeerL:344171498115694611>"
+    
     override fun run(ctx: CommandContext) {
         val m = ctx.args.nextMemberOrNull()
 
