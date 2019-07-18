@@ -2,6 +2,7 @@ package me.alexflipnote.kawaiibot.commands
 
 import com.github.natanbc.weeb4j.image.NsfwFilter
 import me.alexflipnote.kawaiibot.KawaiiBot
+import me.alexflipnote.kawaiibot.extensions.clean
 import me.aurieh.ichigo.core.CommandContext
 import me.aurieh.ichigo.core.ICommand
 import me.aurieh.ichigo.core.annotations.Command
@@ -24,7 +25,7 @@ class Poke : ICommand {
                 val api = KawaiiBot.wolkeApi
                 api.getRandomImage("poke", null, null, NsfwFilter.NO_NSFW, null).async { image ->
                     ctx.sendEmbed {
-                        setDescription("**${m.effectiveName}**, you got a poke from **${ctx.author.name}**")
+                        setDescription("**${m.effectiveName.clean()}**, you got a poke from **${ctx.author.name}**")
                         setImage(image.url)
                     }
                 }
