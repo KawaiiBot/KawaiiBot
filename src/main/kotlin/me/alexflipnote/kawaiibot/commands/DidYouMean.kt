@@ -7,9 +7,9 @@ import me.aurieh.ichigo.core.annotations.Command
 import net.dv8tion.jda.core.Permission
 import okhttp3.RequestBody
 
-@Command(description = "Make a dank, drake meme", botPermissions = [Permission.MESSAGE_ATTACH_FILES])
-class Drake : AbstractAPICommand() {
-    override val path = "/drake"
+@Command(description = "Make those lovely auto-correct Google searches", botPermissions = [Permission.MESSAGE_ATTACH_FILES])
+class DidYouMean : AbstractAPICommand() {
+    override val path = "/didyoumean"
 
     override fun makeArgument(ctx: CommandContext): String {
         val args = ctx.argString.split(" | ")
