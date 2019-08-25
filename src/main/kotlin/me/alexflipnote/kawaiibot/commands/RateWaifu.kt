@@ -13,7 +13,7 @@ class RateWaifu : ICommand {
     override fun run(ctx: CommandContext) {
         if (!ctx.argString.isEmpty()) {
             // The random should have decimals, but idk how...
-            ctx.send("I'd rate ${StringUtil.cleanContent(ctx.args.asDisplayString)} a **${r.nextInt(100 - 1) + 1} / 100**")
+            ctx.send("I'd rate `${StringUtil.cleanerContent(ctx.argString)}` a **${r.nextInt(100 - 1) + 1} / 100**")
         } else {
             ctx.send("You have to rate something..?")
         }
