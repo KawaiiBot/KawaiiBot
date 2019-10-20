@@ -15,6 +15,7 @@ gradle-app.setting
 
 out/
 .idea/
+.vscode/
 config.properties
 dev.properties
 *.iml

@@ -1,13 +1,33 @@
-# KawaiiBot v3.2.1
+# KawaiiBot
 
-## Building on the host
-`chmod +x gradlew && ./gradlew shadowJar` -> `build/libs`
+## Installation
 
-## Building via Docker
-`docker build -t kawaiibot .`
+If you need help with theses steps, you can ask for help on our [discord](https://discord.gg/wGwgWJW)
 
-## Deployment via Docker Compose
-`docker-compose up -d --build`
+### Building on the host
+```bash
+chmod +x gradlew && ./gradlew shadowJar
+```
 
-## Development setup
-`chmod +x gradlew && ./gradlew cleanIdea idea`
+### Building on windows
+```bash
+./gradlew.bat build
+./gradlew.bat shadowJar
+```
+
+
+### Building via Docker
+```bash
+docker build -t kawaiibot .
+```
+
+### Deployment via Docker Compose
+```bash
+docker-compose up -d --build
+```
+
+### Development setup
+```bash
+chmod +x gradlew && ./gradlew cleanIdea idea
+```
+

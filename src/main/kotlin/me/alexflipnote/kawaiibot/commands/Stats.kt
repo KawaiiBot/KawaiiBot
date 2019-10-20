@@ -27,6 +27,9 @@ class Stats : ICommand {
         val secondsSinceBoot = (KawaiiBot.uptime / 1000).toDouble()
         val commandsPerSecond = (KawaiiBot.pornUsage + KawaiiBot.otherCommandUsage) / secondsSinceBoot
         val formattedCPS = dpFormatter.format(commandsPerSecond)
+        val totalCommands = KawaiiBot.otherCommandUsage + KawaiiBot.pornUsage
+        val pornCommandsPercentage = (KawaiiBot.pornUsage * 100 / totalCommands * 100) / 100
+        val otherCommandsPercentage = 100 - pornCommandsPercentage
 
         val sb = StringBuilder()
         sb.append("```prolog\n")
@@ -38,8 +41,8 @@ class Stats : ICommand {
         sb.append("\n\nBOT STATISTICS\n")
         sb.append("• Guilds        :: ${KawaiiBot.shardManager.guildCache.size()}\n")
         sb.append("• Users         :: ${KawaiiBot.shardManager.userCache.size()}\n")
-        sb.append("• Porn Cmds     :: ${KawaiiBot.pornUsage}\n")
-        sb.append("• Normal Cmds   :: ${KawaiiBot.otherCommandUsage}\n")
+        sb.append("• Porn Cmds     :: ${KawaiiBot.pornUsage} (${pornCommandsPercentage}%)\n")
+        sb.append("• Normal Cmds   :: ${KawaiiBot.otherCommandUsage} (${otherCommandsPercentage}%)\n")
         sb.append("  • Per Second  :: $formattedCPS\n\n")
         sb.append("• Shards Online :: $onlineShards/$shardCount\n")
 
