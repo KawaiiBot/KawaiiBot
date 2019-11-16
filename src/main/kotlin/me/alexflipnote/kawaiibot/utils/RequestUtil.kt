@@ -9,7 +9,7 @@ import java.util.concurrent.CompletableFuture
 typealias BuilderBlock = Request.Builder.() -> Unit
 
 object RequestUtil {
-    val client = OkHttpClient.Builder().build()!!
+    val client: OkHttpClient = OkHttpClient.Builder().build()
 
     fun Call.wrapCallback(): CompletableFuture<Response> {
         val fut = CompletableFuture<Response>()

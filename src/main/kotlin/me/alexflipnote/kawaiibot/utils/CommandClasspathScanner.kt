@@ -29,7 +29,7 @@ object CommandClasspathScanner {
             }
             val cooldown = clazz.annotations.find { it is Cooldown } as? Cooldown
             val builder = try {
-                val instance = clazz.newInstance() as ICommand
+                val instance = clazz.getDeclaredConstructor().newInstance() as ICommand
                 CommandBuilder(instance, annotation, cooldown)
             } catch (e: Throwable) {
                 KawaiiBot.LOG.error("error while creating instance of ${clazz.simpleName}", e)
@@ -37,9 +37,9 @@ object CommandClasspathScanner {
             }
             val checks = try {
                 clazz.annotations
-                        .filter { it is Check }
-                        .map { (it as Check).checker.java }
-                        .map { checksMap.computeIfAbsent(it) { it.newInstance() } }
+                        .filterIsInstance<Check>()
+                        .map { it.checker.java }
+                        .map { checksMap.computeIfAbsent(it) { _ -> it.getDeclaredConstructor().newInstance() } }
             } catch (e: Throwable) {
                 KawaiiBot.LOG.error("error while creating instance of check for ${clazz.simpleName}", e)
                 continue

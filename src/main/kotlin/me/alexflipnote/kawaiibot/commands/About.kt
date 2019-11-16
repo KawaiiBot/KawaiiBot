@@ -12,7 +12,7 @@ class About : ICommand {
     override fun run(ctx: CommandContext) {
         ctx.sendEmbed {
             setTitle("ℹ KawaiiBot v${KawaiiBot.version}")
-            addField("Developers", "AlexFlipnote, devoxin, Yvan, Aurieh, stupid cat & senseful", false)
+            addField("Developers", "AlexFlipnote, devoxin, Yvan, Aurieh, stupid cat & william", false)
             addField("Library", "JDA ${JDAInfo.VERSION}", true)
             addField("My Server!", "https://discord.gg/wGwgWJW", true)
             setThumbnail(ctx.jda.selfUser.effectiveAvatarUrl)
