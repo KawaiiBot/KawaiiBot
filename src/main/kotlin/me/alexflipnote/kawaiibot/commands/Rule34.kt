@@ -18,8 +18,7 @@ class Rule34 : ICommand {
     override fun run(ctx: CommandContext) {
         val args = ctx.args.bySpace
         if (!NSFWCheck.check(args)) {
-            ctx.send("Illegal search term used!")
-            return
+            return ctx.send("This search term is considered illegal, therefor I won't continue with your request...")
         }
         RequestUtil.get(rule34Search + URLEncoder.encode(args.joinToString(" "), "utf-8")).thenAccept {
             val random = Helpers.chooseRandom(NSFWCheck.filterJSON(it.jsonArray()!!))
