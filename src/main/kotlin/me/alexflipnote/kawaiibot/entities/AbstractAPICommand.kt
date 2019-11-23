@@ -35,17 +35,15 @@ abstract class AbstractAPICommand : ICommand {
             .thenAccept {
                 val body = it.body()
 
-                when {
-                    !it.isSuccessful || body == null -> {
-                        KawaiiBot.LOG.error("Invalid response from API for endpoint \"$path\", code: ${it.code()}, command args: $args")
-                        ctx.send("There was an error creating the image, try again later.")
-                    }
-                    else -> {
-                        ctx.channel.sendFile(body.byteStream(), "image.png").queue()
-                    }
+                if (!it.isSuccessful || body == null) {
+                    KawaiiBot.LOG.error("Invalid response from API for endpoint \"$path\", code: ${it.code()}, command args: $args")
+                    ctx.send("There was an error creating the image, try again later.")
+                    body?.close()
+                } else {
+                    ctx.channel.sendFile(body.byteStream(), "image.png")
+                        .submit()
+                        .handle { _, _ -> body.close() }
                 }
-
-                body?.close()
             }.thenException {
                 KawaiiBot.LOG.error("api call failed", it)
                 ctx.send("I couldn't process the request, sorry ;-;")
