@@ -17,10 +17,14 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicLong
 import javax.security.auth.login.LoginException
 
-class SpeedyBoi : SessionController {
+class SpeedyBoi(private val shardIdentifyDelay: Long) : SessionController {
 
     private val globalRatelimit = AtomicLong(Long.MIN_VALUE)
     private val sessionManagers = hashMapOf<Int, SessionManager>()
+
+    init {
+        KawaiiBot.LOG.info("Using a shard identify delay of ${shardIdentifyDelay}ms")
+    }
 
     override fun getGlobalRatelimit() = globalRatelimit.get()
     override fun setGlobalRatelimit(ratelimit: Long) = globalRatelimit.set(ratelimit)
@@ -70,7 +74,7 @@ class SpeedyBoi : SessionController {
 
     class SessionWorker(
         private val manager: SessionManager,
-        private val delay: Long = KawaiiBot.config.getProperty("shardIdentifyDelay", "5000").toLong()
+        private val delay: Long
     ) : Thread("Session-Worker-${manager.id}") {
 
         init {
@@ -149,7 +153,7 @@ class SpeedyBoi : SessionController {
         fun runWorker() {
             synchronized(lock) {
                 if (worker == null) {
-                    worker = SessionWorker(this)
+                    worker = SessionWorker(this, shardIdentifyDelay)
                     worker?.start()
                 }
             }

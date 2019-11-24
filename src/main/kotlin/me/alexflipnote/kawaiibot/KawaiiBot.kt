@@ -60,6 +60,8 @@ object KawaiiBot {
                     .build()
         }
 
+        val shardIdentifyDelay = config.getProperty("shardidentifydelay", "5000").toLong()
+
         httpClient = OkHttpClient.Builder().build()
         commandHandler = CommandHandler.Builder(defaultPrefix)
                 .addCommandsAll(CommandClasspathScanner.scan(this::class.java.classLoader))
@@ -71,7 +73,7 @@ object KawaiiBot {
                 .setToken(config.getProperty("token"))
                 .setGame(Game.playing(defaultPrefix + "help"))
                 .addEventListeners(commandHandler)
-                .setSessionController(SpeedyBoi())
+                .setSessionController(SpeedyBoi(shardIdentifyDelay))
                 .build()
     }
 }
