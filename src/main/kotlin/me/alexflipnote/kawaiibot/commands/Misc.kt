@@ -2,29 +2,27 @@ package me.alexflipnote.kawaiibot.commands
 
 import me.alexflipnote.kawaiibot.KawaiiBot
 import me.alexflipnote.kawaiibot.utils.Helpers
-import me.devoxin.flight.Context
 import me.devoxin.flight.annotations.Command
+import me.devoxin.flight.api.Context
 import me.devoxin.flight.arguments.Greedy
 import me.devoxin.flight.arguments.Name
 import me.devoxin.flight.arguments.Optional
 import me.devoxin.flight.models.Cog
-import net.dv8tion.jda.core.JDA
-import net.dv8tion.jda.core.JDAInfo
-import net.dv8tion.jda.core.entities.Member
-import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactory
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.JDAInfo
+import net.dv8tion.jda.api.entities.Member
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class Misc : Cog {
 
     private val dpFormatter = DecimalFormat("0.00")
-    private val engine = KotlinJsr223JvmLocalScriptEngineFactory().scriptEngine
 
     @Command(description = "About me~")
     fun about(ctx: Context) {
         ctx.embed {
             setTitle("ℹ KawaiiBot v${KawaiiBot.VERSION}")
-            addField("Developers", "AlexFlipnote, Devoxin, Yvan & Aurieh", false)
+            addField("Developers", "AlexFlipnote, devoxin, Yvan, Aurieh, stupid cat & william", false)
             addField("Library", "JDA ${JDAInfo.VERSION}", true)
             addField("My Server!", "https://discord.gg/wGwgWJW", true)
             setThumbnail(ctx.jda.selfUser.effectiveAvatarUrl)
@@ -38,11 +36,8 @@ class Misc : Cog {
 
     @Command(description = "Pong!")
     fun ping(ctx: Context) {
-        val start = System.currentTimeMillis()
-
-        ctx.send("BEEP!") { m ->
-            val end = System.currentTimeMillis()
-            m.editMessage("WS: ${ctx.jda.ping}ms | REST: ${end - start}ms").queue()
+        ctx.jda.restPing.queue {
+            ctx.send("WS: ${ctx.jda.gatewayPing}ms | REST: ${it}ms")
         }
     }
 
@@ -54,16 +49,16 @@ class Misc : Cog {
 
     @Command(description = "View internal information")
     fun stats(ctx: Context) {
-        val uptime = Helpers.parseTime(KawaiiBot.uptime())
+        val uptime = Helpers.parseTime(KawaiiBot.uptime)
         val ramUsedRaw = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()
         val ramUsedMB = ramUsedRaw / 1048576
         val ramUsedPercent = dpFormatter.format(ramUsedRaw.toDouble() / Runtime.getRuntime().totalMemory() * 100)
         val shardCount = KawaiiBot.shardManager.shardsTotal
-        val averageShardLatency = KawaiiBot.shardManager.averagePing.roundToInt()
-        val deadShards = KawaiiBot.shardManager.shards.filterNot { shard -> shard.status == JDA.Status.CONNECTED }
+        val averageShardLatency = KawaiiBot.shardManager.averageGatewayPing.roundToInt()
+        val deadShards = KawaiiBot.shardManager.shards.filterNot { it.status == JDA.Status.CONNECTED }
         val onlineShards = KawaiiBot.shardManager.shardsTotal - deadShards.size
 
-        val secondsSinceBoot = (KawaiiBot.uptime() / 1000).toDouble()
+        val secondsSinceBoot = (KawaiiBot.uptime / 1000).toDouble()
         val commandsPerSecond = (KawaiiBot.pornUsage + KawaiiBot.otherCommandUsage) / secondsSinceBoot
         val formattedCPS = dpFormatter.format(commandsPerSecond)
 
@@ -96,32 +91,6 @@ class Misc : Cog {
     @Command(description = "Invite me to your server :3")
     fun invite(ctx: Context) {
         ctx.send("Invite me with this link \uD83C\uDF80\n<https://discordapp.com/oauth2/authorize?client_id=195244341038546948&scope=bot>")
-    }
-
-    @Command(description = "Evaluates Java code", developerOnly = true)
-    fun eval(ctx: Context, @Name("code") @Greedy code: String) {
-        val bindings = mapOf(
-                "ctx" to ctx,
-                "jda" to ctx.jda,
-                "kb" to KawaiiBot,
-                "sm" to KawaiiBot.shardManager,
-                "cc" to KawaiiBot.commandHandler
-        )
-
-        val bindString = bindings.map { "val ${it.key} = bindings[\"${it.key}\"] as ${it.value.javaClass.kotlin.qualifiedName}" }.joinToString("\n")
-        val bind = engine.createBindings()
-        bind.putAll(bindings)
-
-        try {
-            val result = engine.eval("$bindString\n$code", bind)
-            ctx.messageChannel.sendMessage("```\n$result```").queue(null) {
-                ctx.send("I couldn't send the output ;-;\n```\n$it```")
-            }
-        } catch (e: Exception) {
-            ctx.messageChannel.sendMessage("There was an error during eval...\n```\n$e```").queue(null) {
-                ctx.send("There was an error during eval, but I couldn't send the stacktrace... ;-;\n```\n$it```")
-            }
-        }
     }
 
 }

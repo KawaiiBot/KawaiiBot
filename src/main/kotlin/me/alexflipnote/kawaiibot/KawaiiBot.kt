@@ -4,11 +4,11 @@ package me.alexflipnote.kawaiibot
 import me.alexflipnote.kawaiibot.hooks.CommandClientHook
 import me.alexflipnote.kawaiibot.utils.RequestUtil
 import me.alexflipnote.kawaiibot.utils.WeebApi
-import me.devoxin.flight.CommandClient
-import me.devoxin.flight.CommandClientBuilder
-import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
-import net.dv8tion.jda.bot.sharding.ShardManager
-import net.dv8tion.jda.core.entities.Game
+import me.devoxin.flight.api.CommandClient
+import me.devoxin.flight.api.CommandClientBuilder
+import net.dv8tion.jda.api.entities.Activity
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
+import net.dv8tion.jda.api.sharding.ShardManager
 import org.slf4j.LoggerFactory
 import java.awt.Color
 import java.io.FileInputStream
@@ -18,21 +18,23 @@ import javax.security.auth.login.LoginException
 
 object KawaiiBot {
 
-    const val VERSION = "3.3.0"
+    const val VERSION = "4.0.0"
     private val bootTime = System.currentTimeMillis()
+
     val developerIds = setOf(86477779717066752L, 180093157554388993L, 261912303132344320L, 115076505549144067L)
     val logger = LoggerFactory.getLogger("KawaiiBot")
-
     val config = Properties()
 
     lateinit var shardManager: ShardManager
     lateinit var commandHandler: CommandClient
     lateinit var embedColor: Color
     lateinit var wolkeApi: WeebApi
-    public val httpClient = RequestUtil()
+    val httpClient = RequestUtil()
 
     var otherCommandUsage = 0
     var pornUsage = 0
+
+    val uptime by lazy { System.currentTimeMillis() - bootTime }
 
     @Throws(LoginException::class, IOException::class)
     @JvmStatic
@@ -55,26 +57,21 @@ object KawaiiBot {
         }
 
         commandHandler = CommandClientBuilder()
-                .setPrefixes(defaultPrefix)
-                .setAllowMentionPrefix(true)
-                .setIgnoreBots(true)
-                .useDefaultHelpCommand(true)
-                .setOwnerIds(*developerIds.toLongArray())
-                .addEventListeners(CommandClientHook())
-                .registerDefaultParsers()
-                .build()
+            .setPrefixes(defaultPrefix)
+            .setAllowMentionPrefix(true)
+            .setIgnoreBots(true)
+            .setOwnerIds(*developerIds.toLongArray())
+            .addEventListeners(CommandClientHook())
+            .registerDefaultParsers()
+            .build()
 
         commandHandler.registerCommands("me.alexflipnote.kawaiibot.commands")
 
         shardManager = DefaultShardManagerBuilder()
                 .setShardsTotal(-1)
                 .setToken(config.getProperty("token"))
-                .setGame(Game.playing("${defaultPrefix}help"))
+                .setActivity(Activity.playing("${defaultPrefix}help"))
                 .addEventListeners(commandHandler)
                 .build()
-    }
-
-    fun uptime(): Long {
-        return System.currentTimeMillis() - bootTime
     }
 }

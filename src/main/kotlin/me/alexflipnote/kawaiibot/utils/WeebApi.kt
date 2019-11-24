@@ -7,18 +7,20 @@ import java.util.concurrent.CompletableFuture
 
 private const val BASE_URL = "https://api.weeb.sh"
 
-public class WeebApi(private val token: String) {
+class WeebApi(private val token: String) {
     private val defaultHeaders = Headers.of("Authorization", "Wolke $token")
 
     inner class PendingRequest(private val route: String) {
-        fun queue(callback: (Image?) -> Unit) {
+        fun submit(): CompletableFuture<Image> {
+            val future = CompletableFuture<Image>()
+
             KawaiiBot.httpClient.get(route, defaultHeaders).queue {
                 val body = it?.json() ?: return@queue callback(null)
                 val status = body.getInt("status")
                 val ok = status >= 200 && status <= 400
 
                 if (!ok) {
-                    callback(null)
+                    future.completeExceptionally(null) // @todo
                 }
 
                 val id = body.getString("id")
@@ -26,14 +28,16 @@ public class WeebApi(private val token: String) {
                 val fileType = body.getString("fileType")
                 val url = body.getString("url")
 
-                callback(Image(id, nsfw, fileType, url))
+                future.complete(Image(id, nsfw, fileType, url))
             }
+
+            return future
         }
 
         suspend fun await(): Image? {
             val future = CompletableFuture<Image?>()
 
-            queue {
+            submit {
                 future.complete(it)
             }
 
@@ -78,7 +82,9 @@ enum class Routes(private val route: String) {
     }
 }
 
-class Image(public val id: String,
-            public val nsfw: Boolean,
-            public val fileType: String,
-            public val url: String)
+class Image(
+    val id: String,
+    val nsfw: Boolean,
+    val fileType: String,
+    val url: String
+)

@@ -3,7 +3,6 @@ package me.alexflipnote.kawaiibot.utils
 import kotlinx.coroutines.future.await
 import me.alexflipnote.kawaiibot.KawaiiBot
 import okhttp3.*
-import org.json.JSONObject
 import java.io.IOException
 import java.util.concurrent.CompletableFuture
 

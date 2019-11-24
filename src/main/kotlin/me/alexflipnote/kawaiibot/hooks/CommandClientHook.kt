@@ -1,8 +1,12 @@
 package me.alexflipnote.kawaiibot.hooks
 
 import me.alexflipnote.kawaiibot.KawaiiBot
-import me.devoxin.flight.*
-import net.dv8tion.jda.core.Permission
+import me.devoxin.flight.api.CommandError
+import me.devoxin.flight.api.CommandWrapper
+import me.devoxin.flight.api.Context
+import me.devoxin.flight.api.DefaultCommandClientAdapter
+import me.devoxin.flight.exceptions.BadArgument
+import net.dv8tion.jda.api.Permission
 
 class CommandClientHook : DefaultCommandClientAdapter() {
 
@@ -10,12 +14,12 @@ class CommandClientHook : DefaultCommandClientAdapter() {
         ctx.send("You need to specify a valid `${error.argument.type.simpleName.toLowerCase()}` ;-;")
     }
 
-    override fun onBotMissingPermissions(ctx: Context, command: CommandWrapper, permissions: Array<Permission>) {
+    override fun onBotMissingPermissions(ctx: Context, command: CommandWrapper, permissions: List<Permission>) {
         ctx.send("I don't have enough permissions... ;-;\n\n" +
                 "`Missing:`\n${permissions.joinToString("\n")}")
     }
 
-    override fun onUserMissingPermissions(ctx: Context, command: CommandWrapper, permissions: Array<Permission>) {
+    override fun onUserMissingPermissions(ctx: Context, command: CommandWrapper, permissions: List<Permission>) {
         ctx.send("You don't have enough permissions... ;-;\n\n" +
                 "`Missing:`\n${permissions.joinToString("\n")}")
     }

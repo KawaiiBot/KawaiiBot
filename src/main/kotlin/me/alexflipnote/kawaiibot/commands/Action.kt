@@ -2,34 +2,35 @@ package me.alexflipnote.kawaiibot.commands
 
 import me.alexflipnote.kawaiibot.KawaiiBot
 import me.alexflipnote.kawaiibot.utils.Helpers
-import me.devoxin.flight.Context
 import me.devoxin.flight.annotations.Command
+import me.devoxin.flight.api.Context
 import me.devoxin.flight.arguments.Greedy
 import me.devoxin.flight.arguments.Name
 import me.devoxin.flight.models.Attachment
 import me.devoxin.flight.models.Cog
-import net.dv8tion.jda.core.entities.Member
+import net.dv8tion.jda.api.entities.Member
 
 class Action : Cog {
 
     private val dabComments = arrayOf("Dabs on haters", "Dabbing is so 2016", "#DabIsNotDead")
 
     private fun sendAction(ctx: Context, target: Member?, type: String, action: String?) {
-        KawaiiBot.wolkeApi.getRandomImage(action).queue {
-            if (it == null) {
-                return@queue ctx.send("I-I couldn't find a $type image... I'm sorry ;-;")
-            }
+        KawaiiBot.wolkeApi.getRandomImage(action).submit()
+            .thenAccept {
+                val formattedAction = if (target != null && action != null)
+                    String.format(action, target.user.name, ctx.author.name)
+                else action
 
-            val formattedAction = if (target != null && action != null)
-                String.format(action, target.user.name, ctx.author.name)
-            else action
-
-            ctx.embed {
-                setDescription(formattedAction)
-                setColor(KawaiiBot.embedColor)
-                setImage(it.url)
+                ctx.embed {
+                    setDescription(formattedAction)
+                    setColor(KawaiiBot.embedColor)
+                    setImage(it.url)
+                }
             }
-        }
+            .exceptionally {
+                ctx.send("I-I couldn't find a $type image... I'm sorry ;-;")
+                null
+            }
     }
 
     @Command(description = "Hold the hand of someone :3")
@@ -61,7 +62,7 @@ class Action : Cog {
     @Command(description = "Call someone a baka")
     fun baka(ctx: Context, @Name("target") @Greedy target: Member) {
         if (target.user.idLong == ctx.jda.selfUser.idLong) {
-            return ctx.send("**${ctx.author.asMention}** how could you :'(")
+            return ctx.send("**${ctx.author.asMention}** how could you ;-;''")
         }
 
         if (target.user.idLong == ctx.author.idLong) {
@@ -79,16 +80,15 @@ class Action : Cog {
     @Command(description = "Posts a blushing picture when you just can't hold it >w<")
     fun blush(ctx: Context) = sendAction(ctx, null, "blush", null)
 
-    @Command(description = "Dab on haters")
-    fun dab(ctx: Context) {
-        val comment = Helpers.chooseRandom(dabComments)
-        sendAction(ctx, null, "dab", "**$comment**")
-    }
-
     @Command(description = "Posts a dancing image, get down and boogie")
     fun dance(ctx: Context) = sendAction(ctx, null, "dance", null)
 
     @Command(description = "Displays a random discord meme")
     fun discordmeme(ctx: Context) = sendAction(ctx, null, "discord_memes", null)
 
+    @Command(description = "Dab on haters")
+    fun dab(ctx: Context) {
+        val comment = dabComments.random()
+        sendAction(ctx, null, "dab", "**$comment**")
+    }
 }
