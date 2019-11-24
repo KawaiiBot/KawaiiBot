@@ -3,6 +3,7 @@ package me.alexflipnote.kawaiibot
 import com.github.natanbc.weeb4j.TokenType
 import com.github.natanbc.weeb4j.Weeb4J
 import me.alexflipnote.kawaiibot.utils.CommandClasspathScanner
+import me.alexflipnote.kawaiibot.utils.SpeedyBoi
 import me.aurieh.ichigo.core.CommandHandler
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder
 import net.dv8tion.jda.bot.sharding.ShardManager
@@ -70,6 +71,7 @@ object KawaiiBot {
                 .setToken(config.getProperty("token"))
                 .setGame(Game.playing(defaultPrefix + "help"))
                 .addEventListeners(commandHandler)
+                .setSessionController(SpeedyBoi())
                 .build()
     }
 }
