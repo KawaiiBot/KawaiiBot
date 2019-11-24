@@ -70,7 +70,7 @@ class SpeedyBoi : SessionController {
 
     class SessionWorker(
         private val manager: SessionManager,
-        private val delay: Long = KawaiiBot.config.getProperty("shardIdentifyDelay", "5").toLong()
+        private val delay: Long = KawaiiBot.config.getProperty("shardIdentifyDelay", "5000").toLong()
     ) : Thread("Session-Worker-${manager.id}") {
 
         init {
