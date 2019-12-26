@@ -9,10 +9,6 @@ class Fun : Cog {
 
     private val rpsOptions = listOf("rock", "paper", "scissors")
 
-    fun ImageAPICommand(ctx: Context, endpoint: String, querystring: String) {
-        // TODO: Figure out how Image API works and do stuff here.
-    }
-
     @Command(description = "Rock, paper, scissors!")
     fun rps(ctx: Context, choice: String) {
         if (!rpsOptions.contains(choice)) {
