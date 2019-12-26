@@ -40,14 +40,6 @@ class RequestUtil {
         }
     }
 
-    fun post(url: String, body: RequestBody, headers: Headers): PendingRequest {
-        return request {
-            url(url)
-            headers(headers)
-            post(body)
-        }
-    }
-
     fun request(builder: Request.Builder.() -> Unit): PendingRequest {
         val request = Request.Builder()
                 .header("User-Agent", "KawaiiBot/${KawaiiBot.VERSION} (https://kawaiibot.xyz)")
@@ -55,6 +47,15 @@ class RequestUtil {
                 .build()
 
         return PendingRequest(request)
+    }
+
+    fun getJson(url: String, headers: Headers = Headers.of()): CompletableFuture<JSONObject> {
+        return get(url, headers).submit()
+            .thenApply {
+                it.json()
+                    ?: throw IllegalStateException("Response from $url was not a valid JSON object!\n" +
+                        "Response code: ${it.code()}, message: ${it.message()}")
+            }
     }
 }
 

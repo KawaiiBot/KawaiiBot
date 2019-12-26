@@ -34,9 +34,7 @@ class WeebApi(token: String) {
 
     inner class WeebRequest(private val route: String) {
         fun submit(): CompletableFuture<Image> {
-            return KawaiiBot.httpClient.get(route, defaultHeaders)
-                .submit()
-                .thenApply { it.json() ?: throw IllegalStateException("ResponseBody was not a JSON object!") }
+            return KawaiiBot.httpClient.getJson(route, defaultHeaders)
                 .thenApply {
                     val status = it.getInt("status")
 
