@@ -1,29 +1,30 @@
 package me.alexflipnote.kawaiibot.commands
 
 import me.alexflipnote.kawaiibot.utils.Helpers
-import me.devoxin.flight.Context
 import me.devoxin.flight.annotations.Command
-import me.devoxin.flight.arguments.Name
+import me.devoxin.flight.api.Context
 import me.devoxin.flight.models.Cog
 
 class Fun : Cog {
 
-    private val rpsOptions = arrayOf("rock", "paper", "scissors")
+    private val rpsOptions = listOf("rock", "paper", "scissors")
 
     fun ImageAPICommand(ctx: Context, endpoint: String, querystring: String) {
         // TODO: Figure out how Image API works and do stuff here.
     }
 
     @Command(description = "Rock, paper, scissors!")
-    fun rps(ctx: Context, @Name("option") choice: String) {
+    fun rps(ctx: Context, choice: String) {
         if (!rpsOptions.contains(choice)) {
-            return ctx.send("You have to pick between `rock`, `paper` or `scissors` ;-;")
+            ctx.send("You have to pick between ${Helpers.monospaced(rpsOptions)} ;-;")
+            return
         }
 
-        val selected = Helpers.chooseRandom(rpsOptions)
+        val selected = rpsOptions.random()
 
         if (choice == selected) {
-            return ctx.send("It was a tie, no one wins...")
+            ctx.send("It was a tie, no one wins...")
+            return
         } else if (choice == "rock") {
             if (selected == "paper") {
                 ctx.send("You lose! \uD83D\uDCC4\n**$selected** covers **$choice**")

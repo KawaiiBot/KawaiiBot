@@ -36,6 +36,7 @@ object KawaiiBot {
 
     val uptime by lazy { System.currentTimeMillis() - bootTime }
 
+    @ExperimentalStdlibApi
     @Throws(LoginException::class, IOException::class)
     @JvmStatic
     fun main(args: Array<String>) {

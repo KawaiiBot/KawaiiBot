@@ -13,10 +13,9 @@ object Helpers {
 
     fun chooseRandom(array: Array<String>) = array[random.nextInt(array.size)]
 
-    fun chooseRandom(array: JSONArray): JSONObject = array.getJSONObject(random.nextInt(array.length()))
+    //fun chooseRandom(array: JSONArray): JSONObject = array.getJSONObject(random.nextInt(array.length()))
 
     fun chooseRandom(list: List<String>) = list[random.nextInt(list.size)]
-
 
     fun parseTime(milliseconds: Long): String {
         val seconds = milliseconds / 1000 % 60
@@ -41,7 +40,7 @@ object Helpers {
 
     fun getImageStream(filename: String): InputStream = classLoader.getResourceAsStream(filename)
 
-    fun keyExists(json: JSONObject, key: String) = json.has(key) && !json.isNull(key)
+    //fun keyExists(json: JSONObject, key: String) = json.has(key) && !json.isNull(key)
 
     fun splitText(content: String, limit: Int): Array<String> {
         val pages = ArrayList<String>()
@@ -72,7 +71,10 @@ object Helpers {
             pages.add(chunk.toString())
 
         return pages.toTypedArray()
+    }
 
+    fun monospaced(items: Collection<Any>): String {
+        return items.joinToString("`, `", prefix = "`", postfix = "`")
     }
 
 }

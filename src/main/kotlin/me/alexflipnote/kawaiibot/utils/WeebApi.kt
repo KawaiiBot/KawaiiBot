@@ -7,67 +7,65 @@ import java.util.concurrent.CompletableFuture
 
 private const val BASE_URL = "https://api.weeb.sh"
 
-class WeebApi(private val token: String) {
+class WeebApi(token: String) {
     private val defaultHeaders = Headers.of("Authorization", "Wolke $token")
 
-    inner class PendingRequest(private val route: String) {
-        fun submit(): CompletableFuture<Image> {
-            val future = CompletableFuture<Image>()
-
-            KawaiiBot.httpClient.get(route, defaultHeaders).queue {
-                val body = it?.json() ?: return@queue callback(null)
-                val status = body.getInt("status")
-                val ok = status >= 200 && status <= 400
-
-                if (!ok) {
-                    future.completeExceptionally(null) // @todo
-                }
-
-                val id = body.getString("id")
-                val nsfw = body.getBoolean("nsfw")
-                val fileType = body.getString("fileType")
-                val url = body.getString("url")
-
-                future.complete(Image(id, nsfw, fileType, url))
-            }
-
-            return future
-        }
-
-        suspend fun await(): Image? {
-            val future = CompletableFuture<Image?>()
-
-            submit {
-                future.complete(it)
-            }
-
-            return future.await()
-        }
-    }
-
-    fun getRandomImage(type: String? = null): PendingRequest {
+    fun getRandomImage(type: String? = null): WeebRequest {
         val route = if (type == null) {
             Routes.RandomImage.compile()
         } else {
             Routes.RandomImageByType.compile(type)
         }
-        return PendingRequest(route)
+        return WeebRequest(route)
     }
 
-    fun getImageById(id: String): PendingRequest {
+    fun getImageById(id: String): WeebRequest {
         val route = Routes.ImageById.compile(id)
-        return PendingRequest(route)
+        return WeebRequest(route)
     }
 
-    fun getImageTags(): PendingRequest {
+    fun getImageTags(): WeebRequest {
         val route = Routes.ImageTags.compile()
-        return PendingRequest(route)
+        return WeebRequest(route)
     }
 
-    fun getImageTypes(): PendingRequest {
+    fun getImageTypes(): WeebRequest {
         val route = Routes.ImageTypes.compile()
-        return PendingRequest(route)
+        return WeebRequest(route)
     }
+
+    inner class WeebRequest(private val route: String) {
+        fun submit(): CompletableFuture<Image> {
+            return KawaiiBot.httpClient.get(route, defaultHeaders)
+                .submit()
+                .thenApply { it.json() ?: throw IllegalStateException("ResponseBody was not a JSON object!") }
+                .thenApply {
+                    val status = it.getInt("status")
+
+                    if (status !in 200..300) {
+                        throw IllegalStateException("Invalid response status code $status")
+                    }
+
+                    val id = it.getString("id")
+                    val nsfw = it.getBoolean("nsfw")
+                    val fileType = it.getString("fileType")
+                    val url = it.getString("url")
+
+                    return@thenApply Image(id, nsfw, fileType, url)
+                }
+        }
+
+        suspend fun await(): Image {
+            return submit().await()
+        }
+    }
+
+    inner class Image(
+        val id: String,
+        val nsfw: Boolean,
+        val fileType: String,
+        val url: String
+    )
 }
 
 enum class Routes(private val route: String) {
@@ -81,10 +79,3 @@ enum class Routes(private val route: String) {
         return String.format(BASE_URL + route, *parameters)
     }
 }
-
-class Image(
-    val id: String,
-    val nsfw: Boolean,
-    val fileType: String,
-    val url: String
-)

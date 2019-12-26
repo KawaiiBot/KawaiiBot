@@ -11,8 +11,7 @@ import me.devoxin.flight.models.Cog
 import net.dv8tion.jda.api.entities.Member
 
 class Action : Cog {
-
-    private val dabComments = arrayOf("Dabs on haters", "Dabbing is so 2016", "#DabIsNotDead")
+    private val dabComments = listOf("Dabs on haters", "Dabbing is so 2016", "#DabIsNotDead")
 
     private fun sendAction(ctx: Context, target: Member?, type: String, action: String?) {
         KawaiiBot.wolkeApi.getRandomImage(action).submit()
@@ -21,7 +20,7 @@ class Action : Cog {
                     String.format(action, target.user.name, ctx.author.name)
                 else action
 
-                ctx.embed {
+                ctx.send {
                     setDescription(formattedAction)
                     setColor(KawaiiBot.embedColor)
                     setImage(it.url)
@@ -34,41 +33,46 @@ class Action : Cog {
     }
 
     @Command(description = "Hold the hand of someone :3")
-    fun handhold(ctx: Context, @Name("target") @Greedy target: Member) {
+    fun handhold(ctx: Context, @Greedy target: Member) {
         if (target.user.idLong == ctx.jda.selfUser.idLong) {
-            return ctx.send("*Holds **${ctx.author.name}**'s hand back*")
+            ctx.send("*Holds **${ctx.author.name}**'s hand back*")
+            return
         }
 
         if (target.user.idLong == ctx.author.idLong) {
-            return ctx.send("Sorry to see you alone ;-;")
+            ctx.send("Sorry to see you alone ;-;")
+            return
         }
 
         sendAction(ctx, target, "handholding", "**%s**, **%s** is holding your hand")
     }
 
     @Command(description = "Give someone a hug o////o")
-    fun hug(ctx: Context, @Name("target") @Greedy target: Member) {
+    fun hug(ctx: Context, @Greedy target: Member) {
         if (target.user.idLong == ctx.jda.selfUser.idLong) {
-            return ctx.send("*Hugs **${ctx.author.name}** back* ❤")
+            ctx.send("*Hugs **${ctx.author.name}** back* ❤")
+            return
         }
 
         if (target.user.idLong == ctx.author.idLong) {
-            return ctx.send("Sorry to see you alone...")
+            ctx.send("Sorry to see you alone...")
+            return
         }
 
         sendAction(ctx, target, "hug", "**%s**, you got a hug from **%s**")
     }
 
     @Command(description = "Call someone a baka")
-    fun baka(ctx: Context, @Name("target") @Greedy target: Member) {
+    fun baka(ctx: Context, @Greedy target: Member) {
         if (target.user.idLong == ctx.jda.selfUser.idLong) {
-            return ctx.send("**${ctx.author.asMention}** how could you ;-;''")
+            ctx.send("**${ctx.author.asMention}** how could you ;-;''")
+            return
         }
 
         if (target.user.idLong == ctx.author.idLong) {
-            return ctx.upload(
-                    Attachment.from(Helpers.getImageStream("images/selfbaka.jpg"), "selfbaka.jpg")
-            )
+            val attachment = Attachment.from(Helpers.getImageStream("images/selfbaka.jpg"), "selfbaka.jpg")
+            ctx.send(attachment)
+            return
         }
 
         sendAction(ctx, target, "baka", "**%s**, **%s** called you a baka")

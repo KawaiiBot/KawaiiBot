@@ -5,22 +5,19 @@ import me.alexflipnote.kawaiibot.utils.Helpers
 import me.devoxin.flight.annotations.Command
 import me.devoxin.flight.api.Context
 import me.devoxin.flight.arguments.Greedy
-import me.devoxin.flight.arguments.Name
-import me.devoxin.flight.arguments.Optional
 import me.devoxin.flight.models.Cog
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDAInfo
-import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.User
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class Misc : Cog {
-
     private val dpFormatter = DecimalFormat("0.00")
 
     @Command(description = "About me~")
     fun about(ctx: Context) {
-        ctx.embed {
+        ctx.send {
             setTitle("ℹ KawaiiBot v${KawaiiBot.VERSION}")
             addField("Developers", "AlexFlipnote, devoxin, Yvan, Aurieh, stupid cat & william", false)
             addField("Library", "JDA ${JDAInfo.VERSION}", true)
@@ -42,9 +39,8 @@ class Misc : Cog {
     }
 
     @Command(description = "Displays your, or another user's avatar")
-    fun avatar(ctx: Context, @Name("user") @Optional @Greedy user: Member?) {
-        val member = user?.user ?: ctx.author
-        ctx.send("${member.name}'s Avatar\n${member.effectiveAvatarUrl}?size=1024")
+    fun avatar(ctx: Context, @Greedy user: User = ctx.author) {
+        ctx.send("${user.name}'s Avatar\n${user.effectiveAvatarUrl}?size=1024")
     }
 
     @Command(description = "View internal information")
