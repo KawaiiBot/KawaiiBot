@@ -15,6 +15,7 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.util.*
 import javax.security.auth.login.LoginException
+import kotlin.math.log
 
 object KawaiiBot {
 
@@ -74,5 +75,9 @@ object KawaiiBot {
                 .setActivity(Activity.playing("${defaultPrefix}help"))
                 .addEventListeners(commandHandler)
                 .build()
+
+        shardManager.retrieveApplicationInfo().queue {
+            logger.info("Bot info: ${it.name} (${it.id})")
+        }
     }
 }

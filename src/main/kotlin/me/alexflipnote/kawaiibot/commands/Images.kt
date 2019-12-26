@@ -1,11 +1,9 @@
 package me.alexflipnote.kawaiibot.commands
 
 import me.alexflipnote.kawaiibot.KawaiiBot
-import me.alexflipnote.kawaiibot.utils.Helpers
 import me.devoxin.flight.annotations.Command
 import me.devoxin.flight.api.Context
 import me.devoxin.flight.arguments.Greedy
-import me.devoxin.flight.arguments.Name
 import me.devoxin.flight.models.Attachment
 import me.devoxin.flight.models.Cog
 
@@ -27,7 +25,7 @@ class Images : Cog {
     }
   }
 
-  @Command(description = "Get those achievements like in Minecraft!", aliases = ["ah"])
+  @Command(aliases = ["ah"], description = "Get those achievements like in Minecraft!")
   fun achievement(ctx: Context, @Greedy text: String) {
     ImageAPICommand(ctx, "achievement", text)
   }

@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.Permission
 class CommandClientHook : DefaultCommandClientAdapter() {
 
     override fun onBadArgument(ctx: Context, command: CommandWrapper, error: BadArgument) {
-        ctx.send("You need to specify a valid `${error.argument.type.simpleName.toLowerCase()}` ;-;")
+        ctx.send("You need to specify something for `${error.argument.name}` ;-;")
     }
 
     override fun onBotMissingPermissions(ctx: Context, command: CommandWrapper, permissions: List<Permission>) {
