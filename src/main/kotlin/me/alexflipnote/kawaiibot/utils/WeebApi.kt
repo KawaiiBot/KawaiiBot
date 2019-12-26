@@ -5,8 +5,6 @@ import me.alexflipnote.kawaiibot.KawaiiBot
 import okhttp3.Headers
 import java.util.concurrent.CompletableFuture
 
-private const val BASE_URL = "https://api.weeb.sh"
-
 class WeebApi(token: String) {
     private val defaultHeaders = Headers.of("Authorization", "Wolke $token")
 
@@ -66,16 +64,20 @@ class WeebApi(token: String) {
         val fileType: String,
         val url: String
     )
-}
 
-enum class Routes(private val route: String) {
-    ImageById("/images/%s"),
-    RandomImage("/images/random"),
-    RandomImageByType("/images/random?type=%s"),
-    ImageTypes("/images/types"),
-    ImageTags("/images/tags");
+    enum class Routes(private val route: String) {
+        ImageById("/images/%s"),
+        RandomImage("/images/random"),
+        RandomImageByType("/images/random?type=%s"),
+        ImageTypes("/images/types"),
+        ImageTags("/images/tags");
 
-    fun compile(vararg parameters: String): String {
-        return String.format(BASE_URL + route, *parameters)
+        fun compile(vararg parameters: String): String {
+            return String.format(BASE_URL + route, *parameters)
+        }
+    }
+
+    companion object {
+        private const val BASE_URL = "https://api.weeb.sh"
     }
 }
