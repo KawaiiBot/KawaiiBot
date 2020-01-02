@@ -18,7 +18,7 @@ class StatsPoster(private val botId: String) {
     )
 
     init {
-        task.scheduleAtFixedRate(::postStats, 0, 1, TimeUnit.DAYS)
+        task.scheduleAtFixedRate(::postStats, 1, 1, TimeUnit.DAYS)
     }
 
     fun postStats() {
