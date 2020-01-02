@@ -1,9 +1,10 @@
 package me.alexflipnote.kawaiibot
 
 
+import me.alexflipnote.kawaiibot.apis.StatsPoster
 import me.alexflipnote.kawaiibot.hooks.CommandClientHook
 import me.alexflipnote.kawaiibot.utils.RequestUtil
-import me.alexflipnote.kawaiibot.utils.WeebApi
+import me.alexflipnote.kawaiibot.apis.WeebApi
 import me.devoxin.flight.api.CommandClient
 import me.devoxin.flight.api.CommandClientBuilder
 import net.dv8tion.jda.api.entities.Activity
@@ -15,7 +16,6 @@ import java.io.FileInputStream
 import java.io.IOException
 import java.util.*
 import javax.security.auth.login.LoginException
-import kotlin.math.log
 
 object KawaiiBot {
 
@@ -78,6 +78,7 @@ object KawaiiBot {
 
         shardManager.retrieveApplicationInfo().queue {
             logger.info("Bot info: ${it.name} (${it.id})")
+            StatsPoster(it.id)
         }
     }
 }

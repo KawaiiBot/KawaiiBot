@@ -1,4 +1,4 @@
-package me.alexflipnote.kawaiibot.utils
+package me.alexflipnote.kawaiibot.apis
 
 import kotlinx.coroutines.future.await
 import me.alexflipnote.kawaiibot.KawaiiBot
