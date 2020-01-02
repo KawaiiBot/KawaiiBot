@@ -31,12 +31,15 @@ abstract class BotList(
 
                 override fun onResponse(call: Call, response: Response) {
                     if (response.isSuccessful) {
-                        log.debug("Successfully posted statistics to $name")
+                        log.info("Successfully posted statistics to $name")
                     } else {
                         val code = response.code()
                         val message = response.message()
-                        log.warn("Non-success response code while posting statistics to $name. Code=$code, message=$message")
+                        val body = response.body()!!.string()
+                        log.warn("Non-success response while posting statistics to $name: code=$code, message=$message, body=$body")
                     }
+
+                    response.close()
                 }
             })
         } catch (e: Exception) {

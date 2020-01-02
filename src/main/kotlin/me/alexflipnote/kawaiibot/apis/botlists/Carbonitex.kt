@@ -16,7 +16,7 @@ class Carbonitex(key: String) : BotList(
         val body = RequestBody.create(payload.contentType, payload.body)
 
         return Request.Builder()
-            .url(this.postUrl)
+            .url(postUrl)
             .post(body)
             .build()
     }

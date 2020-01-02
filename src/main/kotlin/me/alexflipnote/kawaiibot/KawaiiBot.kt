@@ -41,7 +41,8 @@ object KawaiiBot {
     @Throws(LoginException::class, IOException::class)
     @JvmStatic
     fun main(args: Array<String>) {
-        if (args.isNotEmpty() && args[0].equals("--sharded", ignoreCase = true)) {
+        val production = args.isNotEmpty() && args[0].equals("--sharded", ignoreCase = true)
+        if (production) {
             logger.info("Running in production mode!")
             config.load(FileInputStream("config.properties"))
         } else {
@@ -78,7 +79,10 @@ object KawaiiBot {
 
         shardManager.retrieveApplicationInfo().queue {
             logger.info("Bot info: ${it.name} (${it.id})")
-            StatsPoster(it.id)
+
+            if (production) {
+                StatsPoster(it.id)
+            }
         }
     }
 }
