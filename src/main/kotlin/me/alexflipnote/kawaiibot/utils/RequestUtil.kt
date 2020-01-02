@@ -2,6 +2,7 @@ package me.alexflipnote.kawaiibot.utils
 
 import kotlinx.coroutines.future.await
 import me.alexflipnote.kawaiibot.KawaiiBot
+import me.alexflipnote.kawaiibot.extensions.json
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
@@ -58,17 +59,3 @@ class RequestUtil {
             }
     }
 }
-
-fun Response.json(): JSONObject? {
-    val body = body()
-
-    body().use {
-        return if (isSuccessful && body != null) {
-            JSONObject(body()!!.string())
-        } else {
-            null
-        }
-    }
-}
-
-fun MediaType.APPLICATION_JSON(): MediaType = okhttp3.MediaType.parse("application/json")!!
