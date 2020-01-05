@@ -36,4 +36,10 @@ class Images : Cog {
   fun achievement(ctx: Context, @Greedy text: String) {
     ImageAPICommand(ctx, "achievement", mapOf("text" to text))
   }
+
+  @Command(aliases = ["ch"], description = "Get those achievements like in Minecraft!",
+      botPermissions = [Permission.MESSAGE_ATTACH_FILES])
+  fun challenge(ctx: Context, @Greedy text: String) {
+    ImageAPICommand(ctx, "challenge", mapOf("text" to text))
+  }
 }
