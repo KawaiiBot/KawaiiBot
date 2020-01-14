@@ -1,10 +1,6 @@
 version: '3'
 
 services:
-  api:
-    container_name: kawaiibot_api
-    hostname: api
-    build: ./kawaiibot_api
   bot:
     container_name: kawaiibot
     build: .

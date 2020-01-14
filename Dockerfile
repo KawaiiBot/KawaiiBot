@@ -1,6 +1,6 @@
 FROM openjdk:alpine
 MAINTAINER Auri <me@aurieh.me>
-ENV GRADLE_VERSION "4.6"
+ENV GRADLE_VERSION "4.10.2"
 
 RUN apk update && apk upgrade && apk add curl
 
@@ -14,7 +14,7 @@ ENV PATH=${PATH}:/opt/gradle/bin
 
 WORKDIR /src
 COPY *gradle* /src/
-RUN gradle --no-daemon downloadDependencies
+RUN gradle --no-daemon build
 
 COPY . .
 RUN gradle --no-daemon shadowJar
@@ -24,4 +24,6 @@ WORKDIR /app
 RUN mv /src/build/libs/kawaiibot-*-all.jar /app/kawaiibot.jar
 RUN mv /src/*.properties /app/
 
-CMD ["java", "-XX:+UseG1GC", "-Xmx28G", "-jar", "/app/kawaiibot.jar"]
+# NOTE: Uncomment when in production
+# CMD ["java", "-XX:+UseG1GC", "-Xmx28G", "-jar", "/app/kawaiibot.jar"]
+CMD ["java", "-jar", "/app/kawaiibot.jar"]
