@@ -25,7 +25,7 @@ class CommandHandler private constructor(val commands: Map<String, CommandWrappe
         if (!readyFired) {
             readyFired = true
             prefixes.add("<@${event.jda.selfUser.id}> ")
-            prefixes.add("<@!${event.jda.selfUser.id}>")
+            prefixes.add("<@!${event.jda.selfUser.id}> ")
         }
     }
 
