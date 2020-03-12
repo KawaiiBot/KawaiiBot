@@ -49,7 +49,8 @@ class Urban : ICommand {
                     for (i in 1..(defs.length() - 1)) {
                         val def = defs.getJSONObject(i)
                         val thumbsUp = def.getInt("thumbs_up")
-                        if (thumbsUp > maxThumbs) {
+                        val word = def.getString("word")
+                        if (thumbsUp > maxThumbs && word.equals(ctx.argString,true)) {
                             best = def
                             maxThumbs = thumbsUp
                         }
