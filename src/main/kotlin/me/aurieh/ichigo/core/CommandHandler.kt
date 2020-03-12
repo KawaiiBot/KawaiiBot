@@ -16,42 +16,49 @@ import java.util.*
 
 
 class CommandHandler private constructor(val commands: Map<String, CommandWrapper>, val aliases: Map<String, String>, val prefix: String, private val checks: Set<ICheck>, private val developers: Set<Long>) : ListenerAdapter() {
-    private var mentionPattern: Regex? = null
+    private var readyFired = false
+
+    private val prefixes = mutableListOf(prefix)
     internal val coroutineContext by lazy { newFixedThreadPoolContext(Runtime.getRuntime().availableProcessors() / 2, "CommandHandlerPool") }
 
     override fun onReady(event: ReadyEvent) {
-        mentionPattern = Regex("^<@!?${event.jda.selfUser.id}>")
+        if (!readyFired) {
+            readyFired = true
+            prefixes.add("<@${event.jda.selfUser.id}> ")
+            prefixes.add("<@!${event.jda.selfUser.id}> ")
+        }
     }
 
     override fun onGuildJoin(event: GuildJoinEvent) {
-        for (channel in event.guild.textChannels) {
-            if (!event.guild.selfMember.hasPermission(channel, Permission.MESSAGE_WRITE))
-                continue
+        val welcomeChannel = event.guild.textChannels.firstOrNull { it.canTalk() }
+            ?: return
 
-            channel.sendMessage("Hello everyone, t-thanks for adding me :3\n" +
-                    "I hope I can do good on t-this server ❤\n" +
-                    "Use **+help** to see what I can do for you~\n" +
-                    "If you want help from my masters, join here: **<https://discord.gg/wGwgWJW>**\n" +
-                    "or follow my Twitter here **<https://twitter.com/KawaiiDiscord>** ;3").queue()
-            break
-        }
+        welcomeChannel.sendMessage("Hello everyone, t-thanks for adding me :3\n" +
+            "I hope I can do good on t-this server ❤\n" +
+            "Use **+help** to see what I can do for you~\n" +
+            "If you want help from my masters, join here: **<https://discord.gg/wGwgWJW>**\n" +
+            "or follow my Twitter here **<https://twitter.com/KawaiiDiscord>** ;3").queue()
     }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
-        if (event.isWebhookMessage || event.author.isFake || event.author.isBot || event.author.idLong == event.jda.selfUser.idLong)
+        if (event.isWebhookMessage || event.author.isFake || event.author.isBot) {
             return
-        if (!event.isFromType(ChannelType.PRIVATE) && !event.guild.selfMember.hasPermission(event.textChannel, Permission.MESSAGE_WRITE))
-            return
-        if (event.guild != null && !event.guild.isAvailable)
-            return // lol fuck discord
-
-        var content = event.message.contentRaw
-        var prefix = prefix
-        if (!content.startsWith(prefix)) {
-            prefix = mentionPattern?.find(content)?.value ?: return
         }
-        content = content.drop(prefix.length).trim()
-        val iter = StringTokenizer.tokenizeToIterator(content)
+
+        if (event.channelType.isGuild) { // Guild checks
+            if (!event.guild.isAvailable) return
+            if (!event.textChannel.canTalk()) return
+        }
+
+        val content = event.message.contentRaw
+        val trigger = prefixes.firstOrNull { content.startsWith(it) } ?: return
+        val withoutTrigger = content.substring(trigger.length).trim()
+
+        if (withoutTrigger.isEmpty()) {
+            return
+        }
+
+        val iter = StringTokenizer.tokenizeToIterator(withoutTrigger)
         if (!iter.hasNext()) return
         val label = try {
             iter.next()
@@ -73,11 +80,11 @@ class CommandHandler private constructor(val commands: Map<String, CommandWrappe
             send(event, "**Sorry, you have to be a developer to use this command**")
             return
         }
-        if (command.properties.guildOnly && !event.isFromType(ChannelType.TEXT)) {
+        if (command.properties.guildOnly && !event.channelType.isGuild) {
             send(event, "**You cannot use this command in DMs!**")
             return
         }
-        if (command.properties.isNSFW && event.textChannel != null && !event.textChannel.isNSFW) {
+        if (command.properties.isNSFW && (event.channelType.isGuild && !event.textChannel.isNSFW)) {
             send(event, "**You can only use this command in NSFW or DM channels**")
             return
         }

@@ -31,19 +31,22 @@ abstract class AbstractAPICommand : ICommand {
 
         val args = makeArgument(ctx)
 
-        RequestUtil.get("${KawaiiBot.config.getProperty("api_url")}$path?$args").thenAccept {
-            val body = it.closing()
-            if (!it.isSuccessful) {
-                KawaiiBot.LOG.error("bad response status code ${it.code()}, args ?$args")
-                ctx.send("There was an error creating the image, try again later.")
-            } else if (body == null) {
-                ctx.send("I couldn't create the image ;-;")
-            } else {
-                ctx.channel.sendFile(body.byteStream(), "image.png").queue()
+        RequestUtil.get("${KawaiiBot.config.getProperty("api_url")}$path?$args")
+            .thenAccept {
+                val body = it.body()
+
+                if (!it.isSuccessful || body == null) {
+                    KawaiiBot.LOG.error("Invalid response from API for endpoint \"$path\", code: ${it.code()}, command args: $args")
+                    ctx.send("There was an error creating the image, try again later.")
+                    body?.close()
+                } else {
+                    ctx.channel.sendFile(body.byteStream(), "image.png")
+                        .submit()
+                        .handle { _, _ -> body.close() }
+                }
+            }.thenException {
+                KawaiiBot.LOG.error("api call failed", it)
+                ctx.send("I couldn't process the request, sorry ;-;")
             }
-        }.thenException {
-            KawaiiBot.LOG.error("api call failed", it)
-            ctx.send("I couldn't process the request, sorry ;-;")
-        }
     }
 }

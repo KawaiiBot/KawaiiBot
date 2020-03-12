@@ -5,7 +5,7 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 object Responses {
-    private val dateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM uuuu, kk:mm")
+    private val dateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM uuuu, HH:mm")
 
     fun responsible(author: User, reason: String = ""): String {
         return "[ ${author.name}#${author.discriminator} ] ${if (reason.isEmpty()) "No reason given." else reason}"
