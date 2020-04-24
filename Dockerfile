@@ -1,6 +1,6 @@
 FROM openjdk:alpine
 MAINTAINER Auri <me@aurieh.me>
-ENV GRADLE_VERSION "4.6"
+ENV GRADLE_VERSION "4.9"
 
 RUN apk update && apk upgrade && apk add curl
 
