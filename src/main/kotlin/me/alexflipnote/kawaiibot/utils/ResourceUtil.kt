@@ -9,7 +9,7 @@ object ResourceUtil {
     private val classLoader = this.javaClass.classLoader!!
 
     @Throws(IOException::class)
-    fun getResource(path: String) = classLoader.getResourceAsStream(path)
+    fun getResource(path: String) = classLoader.getResourceAsStream(path)!!
 
     inline fun <reified T : Any> readJson(path: String): T {
         return gson.fromJson(InputStreamReader(getResource(path)), T::class.java)

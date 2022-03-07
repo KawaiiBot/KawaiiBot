@@ -2,12 +2,11 @@ package me.alexflipnote.kawaiibot.commands
 
 import me.alexflipnote.kawaiibot.KawaiiBot
 import me.alexflipnote.kawaiibot.utils.Helpers
-import me.devoxin.flight.annotations.Command
 import me.devoxin.flight.api.Context
-import me.devoxin.flight.arguments.Greedy
-import me.devoxin.flight.arguments.Name
-import me.devoxin.flight.models.Attachment
-import me.devoxin.flight.models.Cog
+import me.devoxin.flight.api.annotations.Command
+import me.devoxin.flight.api.annotations.Greedy
+import me.devoxin.flight.api.entities.Attachment
+import me.devoxin.flight.api.entities.Cog
 import net.dv8tion.jda.api.entities.Member
 
 class Action : Cog {
@@ -35,13 +34,11 @@ class Action : Cog {
     @Command(description = "Hold the hand of someone :3")
     fun handhold(ctx: Context, @Greedy target: Member) {
         if (target.user.idLong == ctx.jda.selfUser.idLong) {
-            ctx.send("*Holds **${ctx.author.name}**'s hand back*")
-            return
+            return ctx.send("*Holds **${ctx.author.name}**'s hand back*")
         }
 
         if (target.user.idLong == ctx.author.idLong) {
-            ctx.send("Sorry to see you alone ;-;")
-            return
+            return ctx.send("Sorry to see you alone ;-;")
         }
 
         sendAction(ctx, target, "handholding", "**%s**, **%s** is holding your hand")
@@ -50,13 +47,11 @@ class Action : Cog {
     @Command(description = "Give someone a hug o////o")
     fun hug(ctx: Context, @Greedy target: Member) {
         if (target.user.idLong == ctx.jda.selfUser.idLong) {
-            ctx.send("*Hugs **${ctx.author.name}** back* ❤")
-            return
+            return ctx.send("*Hugs **${ctx.author.name}** back* ❤")
         }
 
         if (target.user.idLong == ctx.author.idLong) {
-            ctx.send("Sorry to see you alone...")
-            return
+            return ctx.send("Sorry to see you alone...")
         }
 
         sendAction(ctx, target, "hug", "**%s**, you got a hug from **%s**")
@@ -65,14 +60,12 @@ class Action : Cog {
     @Command(description = "Call someone a baka")
     fun baka(ctx: Context, @Greedy target: Member) {
         if (target.user.idLong == ctx.jda.selfUser.idLong) {
-            ctx.send("**${ctx.author.asMention}** how could you ;-;''")
-            return
+            return ctx.send("**${ctx.author.asMention}** how could you ;-;''")
         }
 
         if (target.user.idLong == ctx.author.idLong) {
             val attachment = Attachment.from(Helpers.getImageStream("images/selfbaka.jpg"), "selfbaka.jpg")
-            ctx.send(attachment)
-            return
+            return ctx.send(attachment)
         }
 
         sendAction(ctx, target, "baka", "**%s**, **%s** called you a baka")

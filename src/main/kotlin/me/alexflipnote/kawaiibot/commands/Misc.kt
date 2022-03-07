@@ -2,10 +2,10 @@ package me.alexflipnote.kawaiibot.commands
 
 import me.alexflipnote.kawaiibot.KawaiiBot
 import me.alexflipnote.kawaiibot.utils.Helpers
-import me.devoxin.flight.annotations.Command
 import me.devoxin.flight.api.Context
-import me.devoxin.flight.arguments.Greedy
-import me.devoxin.flight.models.Cog
+import me.devoxin.flight.api.annotations.Command
+import me.devoxin.flight.api.annotations.Greedy
+import me.devoxin.flight.api.entities.Cog
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDAInfo
 import net.dv8tion.jda.api.entities.User
@@ -88,5 +88,4 @@ class Misc : Cog {
     fun invite(ctx: Context) {
         ctx.send("Invite me with this link \uD83C\uDF80\n<https://discordapp.com/oauth2/authorize?client_id=195244341038546948&scope=bot>")
     }
-
 }

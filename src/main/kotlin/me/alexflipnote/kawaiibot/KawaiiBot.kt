@@ -19,7 +19,7 @@ import javax.security.auth.login.LoginException
 
 object KawaiiBot {
 
-    const val VERSION = "4.0.0"
+    const val VERSION = "5.0.0"
     private val bootTime = System.currentTimeMillis()
 
     val developerIds = setOf(86477779717066752L, 180093157554388993L, 261912303132344320L, 115076505549144067L)
@@ -68,7 +68,7 @@ object KawaiiBot {
             .registerDefaultParsers()
             .build()
 
-        commandHandler.registerCommands("me.alexflipnote.kawaiibot.commands")
+        commandHandler.commands.register("me.alexflipnote.kawaiibot.commands")
 
         shardManager = DefaultShardManagerBuilder()
                 .setShardsTotal(-1)

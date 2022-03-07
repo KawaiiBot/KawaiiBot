@@ -2,11 +2,11 @@ package me.alexflipnote.kawaiibot.commands
 
 import me.alexflipnote.kawaiibot.KawaiiBot
 import me.alexflipnote.kawaiibot.extensions.urlWithQueryParams
-import me.devoxin.flight.annotations.Command
 import me.devoxin.flight.api.Context
-import me.devoxin.flight.arguments.Greedy
-import me.devoxin.flight.models.Attachment
-import me.devoxin.flight.models.Cog
+import me.devoxin.flight.api.annotations.Command
+import me.devoxin.flight.api.annotations.Greedy
+import me.devoxin.flight.api.entities.Attachment
+import me.devoxin.flight.api.entities.Cog
 import net.dv8tion.jda.api.Permission
 
 class Images : Cog {

@@ -6,7 +6,7 @@ import org.json.JSONObject
 object NSFWCheck {
     private val ILLEGAL_NSFW = ResourceUtil.readJson<HashSet<String>>("constants/illegalNSFW.json")
 
-    fun check(items: Iterable<String>): Boolean = ILLEGAL_NSFW.intersect(items.map { it.toLowerCase() }).isEmpty()
+    fun check(items: Iterable<String>): Boolean = ILLEGAL_NSFW.intersect(items.map { it.toLowerCase() }.toSet()).isEmpty()
 
     fun filterJSON(json: JSONArray): JSONArray {
         json.asIterable().forEachIndexed { i, it ->
